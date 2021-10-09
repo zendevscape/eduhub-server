@@ -9,25 +9,29 @@ import { Order } from '../../features/orders';
 import { OrderItem } from '../../features/order-items';
 
 export const loadTypeorm = async (): Promise<Connection> => {
-  // Set connection options.
-  const connectionOptions: ConnectionOptions = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    type: config.database.type as any,
-    host: config.database.host,
-    port: config.database.port,
-    username: config.database.username,
-    password: config.database.password,
-    database: config.database.database,
-    synchronize: config.database.syncronize,
-    logging: config.database.logging,
-    entities: [Admin, Guardian, Order, OrderItem, Product, Seller, Student, Transaction, User],
-  };
+  try {
+    // Set connection options.
+    const connectionOptions: ConnectionOptions = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type: config.database.type as any,
+      host: config.database.host,
+      port: config.database.port,
+      username: config.database.username,
+      password: config.database.password,
+      database: config.database.database,
+      synchronize: config.database.syncronize,
+      logging: config.database.logging,
+      entities: [Admin, Guardian, Order, OrderItem, Product, Seller, Student, Transaction, User],
+    };
 
-  // Set container.
-  useContainer(Container);
+    // Set container.
+    useContainer(Container);
 
-  // Create database connection.
-  const connection = await createConnection(connectionOptions);
-
-  return connection;
+    // Create database connection.
+    const connection = await createConnection(connectionOptions);
+    console.log('Connected to database');
+    return connection;
+  } catch (err) {
+    console.log('Unable to connect to database');
+  }
 };
