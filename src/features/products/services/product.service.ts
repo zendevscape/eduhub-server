@@ -9,7 +9,7 @@ import { InvariantError } from '../../../core/exception/InvariantError';
 export class ProductService {
   constructor(@InjectRepository(Product) private readonly productRepository: Repository<Product>) {}
 
-  async createProduct(payload: Product): Promise<string> {
+  async createProduct(payload: Product): Promise<string | undefined> {
     ProductValidator.validatePostProductPayloadSchema(payload);
 
     const product = this.productRepository.create(payload);
