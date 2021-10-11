@@ -1,41 +1,43 @@
-import { InvariantError } from '../../../core/exception/InvariantError';
-import {
-  DeleteProductsPayloadSchema,
-  PostProductPayloadSchema,
-  ProductIdParamSchema,
-  UpdateProductPayloadSchema,
-} from './schema';
+export * from './products-validation';
 
-export const ProductValidator = {
-  validatePostProductPayloadSchema: (payload: any) => {
-    const validationResult = PostProductPayloadSchema.validate(payload);
+// import { BadRequestError } from '../../../core/errors';
+// import {
+//   DeleteProductsPayloadSchema,
+//   PostProductPayloadSchema,
+//   ProductIdParamSchema,
+//   UpdateProductPayloadSchema,
+// } from './schema';
 
-    if (validationResult.error) {
-      throw new InvariantError(validationResult.error.message);
-    }
-  },
+// export const ProductValidator = {
+//   validatePostProductPayloadSchema: (payload: any) => {
+//     const validationResult = PostProductPayloadSchema.validate(payload);
 
-  validateUpdateProductPayloadSchema: (payload: any) => {
-    const validationResult = UpdateProductPayloadSchema.validate(payload);
+//     if (validationResult.error) {
+//       throw new BadRequestError(validationResult.error.message);
+//     }
+//   },
 
-    if (validationResult.error) {
-      throw new InvariantError(validationResult.error.message);
-    }
-  },
+//   validateUpdateProductPayloadSchema: (payload: any) => {
+//     const validationResult = UpdateProductPayloadSchema.validate(payload);
 
-  validateDeleteProductsPayloadSchema: (payload: any) => {
-    const validationResult = DeleteProductsPayloadSchema.validate(payload);
+//     if (validationResult.error) {
+//       throw new BadRequestError(validationResult.error.message);
+//     }
+//   },
 
-    if (validationResult.error) {
-      throw new InvariantError(validationResult.error.message);
-    }
-  },
+//   validateDeleteProductsPayloadSchema: (payload: any) => {
+//     const validationResult = DeleteProductsPayloadSchema.validate(payload);
 
-  validateProductIdParamSchema: (param: any) => {
-    const validationResult = ProductIdParamSchema.validate(param);
+//     if (validationResult.error) {
+//       throw new BadRequestError(validationResult.error.message);
+//     }
+//   },
 
-    if (validationResult.error) {
-      throw new InvariantError(validationResult.error.message);
-    }
-  },
-};
+//   validateProductIdParamSchema: (param: any) => {
+//     const validationResult = ProductIdParamSchema.validate(param);
+
+//     if (validationResult.error) {
+//       throw new BadRequestError(validationResult.error.message);
+//     }
+//   },
+// };

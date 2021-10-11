@@ -1,109 +1,127 @@
-import { Delete, Get, JsonController, Patch, Post, Req, Res } from 'routing-controllers';
+import { celebrate, Modes } from 'celebrate';
+import {
+  Body,
+  Delete,
+  Get,
+  HttpCode,
+  JsonController,
+  Param,
+  Patch,
+  Post,
+  UseBefore,
+} from 'routing-controllers';
 import { Service } from 'typedi';
-import { errorHandler } from '../../errorHandler';
+import { Response } from '../../../core/types';
 import { ProductService } from '../services';
-import { ProductValidator } from '../validation';
+import {
+  CreateProductsReq,
+  UpdateProductByIdReq,
+  ProductsRes,
+  ProductRes,
+  DeleteProductsReq,
+} from '../types';
+import {
+  CreateProductsSchema,
+  DeleteProductByIdSchema,
+  ReadProductByIdSchema,
+  UpdateProductByIdSchema,
+} from '../validation';
 
 @JsonController('/products')
 @Service()
 export class ProductController {
-  productValidator: any;
-  constructor(private readonly productService: ProductService) {
-    this.productValidator = ProductValidator;
-  }
+  constructor(private readonly productService: ProductService) { }
 
   @Post('/')
-  async postProduct(@Req() request: any, @Res() response: any): Promise<any> {
-    try {
-      this.productValidator.validatePostProductPayloadSchema(request.body);
-      const productId = await this.productService.createProduct(request.body);
-      return response.status(201).json({
-        status: 'success',
-        message: 'Product added successfully',
-        data: {
-          productId,
-        },
-      });
-    } catch (err) {
-      return errorHandler(err, response);
-    }
-  }
-
-  @Get('/')
-  async getProducts(@Req() request: any, @Res() response: any): Promise<any> {
-    const products = await this.productService.getProducts();
-    return response.status(200).json({
-      status: 'success',
+  @HttpCode(201)
+  @UseBefore(celebrate(CreateProductsSchema, {}, { mode: Modes.FULL }))
+  async postProduct(
+    @Body()
+    body: CreateProductsReq[],
+  ): Promise<Response<ProductsRes>> {
+    const products = await this.productService.createProduct(body);
+    return {
+      success: true,
+      message: 'Product added successfully',
       data: {
         products,
       },
-    });
+    };
   }
 
-  @Get('/:id/')
-  async getProductById(@Req() request: any, @Res() response: any): Promise<any> {
-    try {
-      const { id } = request.params;
-      this.productValidator.validateProductIdParamSchema(id);
-      const product = await this.productService.getProductById(id);
-      return response.status(200).json({
-        status: 'success',
-        data: {
-          product,
-        },
-      });
-    } catch (err) {
-      return errorHandler(err, response);
-    }
+  @Get('/')
+  @HttpCode(200)
+  async getProducts(): Promise<Response<ProductsRes>> {
+    const products = await this.productService.getProducts();
+    return {
+      success: true,
+      data: {
+        products,
+      },
+    };
+  }
+
+  @Get('/:id')
+  @HttpCode(200)
+  @UseBefore(celebrate(ReadProductByIdSchema, {}, {}))
+  async getProductById(
+    @Param('id')
+    id: string,
+  ): Promise<Response<ProductRes>> {
+    const product = await this.productService.getProductById(id);
+    return {
+      success: true,
+      data: {
+        product,
+      },
+    };
   }
 
   @Patch('/:id/')
-  async updateProductById(@Req() request: any, @Res() response: any): Promise<any> {
-    try {
-      const { id } = request.params;
-      this.productValidator.validateProductIdParamSchema(id);
-      this.productValidator.validateUpdateProductPayloadSchema(request.body);
-      const updatedProduct = await this.productService.updateProductById(id, request.body);
+  @HttpCode(200)
+  @UseBefore(celebrate(UpdateProductByIdSchema, {}, { mode: Modes.FULL }))
+  async updateProductById(
+    @Param('id')
+    id: string,
+    @Body()
+    body: UpdateProductByIdReq,
+  ): Promise<Response<ProductRes>> {
+    const product = await this.productService.updateProductById(id, body);
 
-      return response.status(200).json({
-        status: 'success',
-        message: 'Product updated successfully',
-        data: {
-          updatedProduct,
-        },
-      });
-    } catch (err) {
-      return errorHandler(err, response);
-    }
+    return {
+      success: true,
+      message: 'Product updated successfully',
+      data: {
+        product,
+      },
+    };
   }
 
   @Delete('/:id/')
-  async deleteProductById(@Req() request: any, @Res() response: any): Promise<any> {
-    try {
-      const { id } = request.params;
-      this.productValidator.validateProductIdParamSchema(id);
-      await this.productService.deleteProductById(id);
-      return response.json({
-        status: 'success',
-        message: 'Product deleted successfully',
-      });
-    } catch (err) {
-      return errorHandler(err, response);
-    }
+  @HttpCode(200)
+  @UseBefore(celebrate(DeleteProductByIdSchema, {}, { mode: Modes.FULL }))
+  async deleteProductById(
+    @Param('id')
+    id: string,
+  ): Promise<Response<undefined>> {
+    await this.productService.deleteProductById(id);
+    return {
+      success: true,
+      message: 'Product deleted successfully',
+    };
   }
 
   @Delete('/')
-  async deleteProducts(@Req() request: any, @Res() response: any): Promise<any> {
-    try {
-      this.productValidator.validateDeleteProductsPayloadSchema(request.body);
-      await this.productService.deleteProducts(request.body);
-      return response.status(200).json({
-        status: 'success',
-        message: 'Products deleted successfully',
-      });
-    } catch (err) {
-      return errorHandler(err, response);
-    }
+  @HttpCode(200)
+  async deleteProducts(
+    @Body()
+    body: DeleteProductsReq[],
+  ): Promise<Response<undefined>> {
+    await this.productService.deleteProducts(body);
+    return {
+      success: true,
+      message: 'Products deleted successfully',
+    };
   }
 
   // TODO: add more endpoint.

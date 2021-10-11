@@ -8,7 +8,7 @@ import { Product } from '../../features/products';
 import { Order } from '../../features/orders';
 import { OrderItem } from '../../features/order-items';
 
-export const loadTypeorm = async (): Promise<Connection> => {
+export const loadTypeorm = async (): Promise<Connection | void> => {
   try {
     // Set connection options.
     const connectionOptions: ConnectionOptions = {

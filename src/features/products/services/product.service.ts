@@ -2,35 +2,36 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Repository } from 'typeorm';
 import { Service } from 'typedi';
 import { Product } from '../entities';
-import { InvariantError } from '../../../core/exception/InvariantError';
-import { NotFoundError } from '../../../core/exception/NotFoundError';
+import { NotFoundError } from '../../../core/errors';
+import { BadRequestError } from '../../../core/errors';
+import { CreateProductsReq, DeleteProductsReq, ProductData, UpdateProductByIdReq } from '../types';
 
 @Service()
 export class ProductService {
   constructor(@InjectRepository(Product) private readonly productRepository: Repository<Product>) {}
 
-  async createProduct(payload: Record<string, unknown>): Promise<string | Array<string>> {
-    const product = this.productRepository.create(payload);
-    const result: any = await this.productRepository.save(product);
+  async createProduct(body: CreateProductsReq[]): Promise<ProductData | ProductData[]> {
+    const product = this.productRepository.create(body);
+    const result: ProductData[] = await this.productRepository.save(product);
 
     if (!result) {
-      throw new InvariantError('Product failed to add');
+      throw new BadRequestError('Product failed to add');
     }
     // Array
     if (result.length) {
-      return result.map((item: Record<string, unknown>) => item.id);
+      return result;
     }
     // Object
-    return result.id;
+    return result[0];
   }
 
-  async getProducts(): Promise<Array<Product | undefined>> {
+  async getProducts(): Promise<ProductData | ProductData[]> {
     const result = await this.productRepository.find();
 
     return result;
   }
 
-  async getProductById(id: string): Promise<Product | undefined> {
+  async getProductById(id: string): Promise<ProductData> {
     const result = await this.productRepository.findOne(id);
     if (!result) {
       throw new NotFoundError('Product not found');
@@ -38,16 +39,15 @@ export class ProductService {
     return result;
   }
 
-  async updateProductById(id: string, payload: any): Promise<any> {
+  async updateProductById(id: string, body: UpdateProductByIdReq): Promise<ProductData> {
     const product = await this.getProductById(id);
-    payload.id = id;
     const result = this.productRepository.save({
       ...product,
-      ...payload,
+      ...body,
     });
 
     if (!result) {
-      throw new InvariantError('Product failed to add');
+      throw new BadRequestError('Product failed to add');
     }
 
     return result;
@@ -58,19 +58,22 @@ export class ProductService {
     await this.productRepository.delete(id);
   }
 
-  async deleteProducts(payload: Array<any>): Promise<void> {
+  async deleteProducts(body: DeleteProductsReq[]): Promise<void> {
     const notFoundProducts: Array<string> = [];
     // eslint-disable-next-line no-loops/no-loops
-    for (const item of payload) {
+    for (const item of body) {
       const result = await this.productRepository.findOne(item.id);
       if (!result) {
         notFoundProducts.push(item.id);
-      } else {
-        await this.productRepository.delete(item.id);
+        if (notFoundProducts.length) {
+          throw new NotFoundError(`Product with id [${notFoundProducts}] not found`);
+        }
       }
     }
-    if (notFoundProducts.length) {
-      throw new NotFoundError(`Product with id [${notFoundProducts}] not found`);
+
+    // eslint-disable-next-line no-loops/no-loops
+    for (const item of body) {
+      await this.productRepository.delete(item.id);
     }
   }
 }

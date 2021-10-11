@@ -10,6 +10,7 @@ import { OrderItemController } from '../../features/order-items';
 import { ProductController } from '../../features/products';
 import { TransactionController } from '../../features/transactions';
 import { UserController } from '../../features/users';
+import { errors } from 'celebrate';
 
 export const loadExpress = (): express.Application => {
   // Create Express app.
@@ -36,6 +37,8 @@ export const loadExpress = (): express.Application => {
   // Configure routing-controller.
   useExpressServer(app, {
     routePrefix: '/api/v1',
+    classTransformer: false,
+    validation: false,
     controllers: [
       OrderController,
       OrderItemController,

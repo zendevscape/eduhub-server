@@ -13,12 +13,13 @@
   },
   "plugins": [
     "@typescript-eslint",
-    "prettier",
-    "no-loops"
+    "no-loops",
+    "prettier"
   ],
   "root": true,
   "rules": {
-    "prettier/prettier": 2,
-    "no-loops/no-loops": 2
+    "@typescript-eslint/no-empty-interface": 0,
+    "no-loops/no-loops": 2,
+    "prettier/prettier": 2
   }
 }
