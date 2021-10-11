@@ -6,7 +6,7 @@ async function main() {
     await loadTypeorm();
     const app = loadExpress();
     app.listen(config.port, () => {
-      console.log(`Now running on port ${config.port}`);
+      console.log(`Server running on port ${config.port}`);
     });
   } catch (error) {
     console.error(error);
