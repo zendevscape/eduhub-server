@@ -8,7 +8,7 @@ import { Product } from '../../features/products';
 import { Order } from '../../features/orders';
 import { OrderItem } from '../../features/order-items';
 
-export const loadTypeorm = async (): Promise<Connection> => {
+export const loadTypeOrm = async (): Promise<Connection> => {
   // Set connection options.
   const connectionOptions: ConnectionOptions = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
