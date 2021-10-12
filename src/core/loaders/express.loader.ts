@@ -36,6 +36,8 @@ export const loadExpress = (): express.Application => {
   // Configure routing-controller.
   useExpressServer(app, {
     routePrefix: '/api/v1',
+    classTransformer: false,
+    validation: false,
     controllers: [
       OrderController,
       OrderItemController,
