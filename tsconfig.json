@@ -9,14 +9,13 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "noEmit": true,
     "pretty": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "moduleResolution": "node",
     "typeRoots": [
-      "src/core/types",
-      "./node_modules/@types"
+      "./src/core/types",
+      "./node_modules/@types",
     ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
