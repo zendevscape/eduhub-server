@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import config from './core/config';
-import { loadExpress, loadTypeorm } from './core/loaders';
+import { loadExpress, loadTypeOrm } from './core/loaders';
 
 async function main() {
-  await loadTypeorm();
+  await loadTypeOrm();
   const app = loadExpress();
   app.listen(config.port);
 }
