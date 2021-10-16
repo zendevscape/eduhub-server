@@ -1,4 +1,4 @@
-import { HttpError } from 'routing-controllers';
+import { HttpError } from './http.error';
 import { Response } from '../types';
 
 export class MethodNotAllowedError extends HttpError {
@@ -11,7 +11,7 @@ export class MethodNotAllowedError extends HttpError {
     this.data = data;
   }
 
-  toJSON(): Response<unknown> {
+  public toJson(): Response<unknown> {
     if (this.data) {
       return {
         success: false,

@@ -1,17 +1,16 @@
-import { HttpError } from 'routing-controllers';
+import { HttpError } from './http.error';
 import { Response } from '../types';
 
 export class BadRequestError extends HttpError {
   public data: unknown;
 
   constructor(message?: string, data?: unknown) {
-    super(400);
+    super(400, message ?? 'Bad request.');
     Object.setPrototypeOf(this, BadRequestError.prototype);
-    this.message = message ?? 'Bad request.';
     this.data = data;
   }
 
-  toJSON(): Response<unknown> {
+  public toJson(): Response<unknown> {
     if (this.data) {
       return {
         success: false,
