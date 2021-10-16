@@ -30,7 +30,7 @@ import {
 @JsonController('/products')
 @Service()
 export class ProductController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   @Post('/')
   @HttpCode(201)
