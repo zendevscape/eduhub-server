@@ -2,6 +2,7 @@ import { CelebrateError } from 'celebrate';
 import { Errback, NextFunction, Request, Response } from 'express';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { Service } from 'typedi';
+import { EntityNotFoundError, QueryFailedError } from 'typeorm';
 import { HttpError } from '../errors';
 
 @Service()
@@ -24,6 +25,21 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
         success: false,
         message: 'Validation failed.',
         data: validation,
+      });
+    } else if (error instanceof EntityNotFoundError) {
+      response.status(404).json({
+        success: false,
+        message: error.message + '.',
+      });
+    } else if (error instanceof QueryFailedError) {
+      response.status(400).json({
+        success: false,
+        message: error.driverError.detail,
+      });
+    } else if (error instanceof SyntaxError) {
+      response.status(400).json({
+        success: false,
+        message: error.message + '.',
       });
     } else if (error instanceof HttpError) {
       response.status(error.httpCode).json(error.toJson());
