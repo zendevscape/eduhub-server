@@ -10,6 +10,7 @@ import { ProductController } from '../../features/products';
 import { TransactionController } from '../../features/transactions';
 import { UserController } from '../../features/users';
 import { ErrorHandler } from '../middlewares';
+import { CommonsController } from '../controllers';
 
 export const loadExpress = (): express.Application => {
   // Create Express app.
@@ -45,6 +46,7 @@ export const loadExpress = (): express.Application => {
       ProductController,
       OrderController,
       OrderItemController,
+      CommonsController,
     ],
     middlewares: [ErrorHandler],
   });
