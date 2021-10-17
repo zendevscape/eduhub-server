@@ -7,7 +7,7 @@ import {
   TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
-import { lowercase } from '../../../core/utils/value-transformers';
+import { encrypt, lowercase } from '../../../core/utils/value-transformers';
 import { Transaction } from '../../transactions/entities';
 
 export enum Role {
@@ -23,11 +23,15 @@ export enum Role {
     type: 'enum',
     name: 'role',
     enum: Role,
+    select: true,
   },
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
+
+  @Column()
+  public role: Role;
 
   @Column()
   public name: string;
@@ -42,20 +46,25 @@ export class User {
   @Column({
     select: false,
     nullable: false,
+    transformer: [encrypt],
   })
   public password: string;
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
   public transactions: Transaction[];
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   public balance: number;
 
-  @Column()
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_time',
+  })
   public createdTime: Date;
 
-  @Column()
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_time',
+  })
   public updatedTime: Date;
 }

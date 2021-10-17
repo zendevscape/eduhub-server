@@ -8,7 +8,7 @@ import { OrderController } from '../../features/orders';
 import { OrderItemController } from '../../features/order-items';
 import { ProductController } from '../../features/products';
 import { TransactionController } from '../../features/transactions';
-import { UserController } from '../../features/users';
+import { UsersController } from '../../features/users';
 import { ErrorHandler } from '../middlewares';
 import { CommonsController } from '../controllers';
 
@@ -41,7 +41,7 @@ export const loadExpress = (): express.Application => {
     classTransformer: false,
     validation: false,
     controllers: [
-      UserController,
+      UsersController,
       TransactionController,
       ProductController,
       OrderController,
