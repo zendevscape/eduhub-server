@@ -40,11 +40,11 @@ export const loadExpress = (): express.Application => {
     classTransformer: false,
     validation: false,
     controllers: [
+      UserController,
+      TransactionController,
+      ProductController,
       OrderController,
       OrderItemController,
-      ProductController,
-      TransactionController,
-      UserController,
     ],
     middlewares: [ErrorHandler],
   });
