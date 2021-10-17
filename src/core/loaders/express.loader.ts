@@ -9,7 +9,7 @@ import { OrderItemController } from '../../features/order-items';
 import { ProductController } from '../../features/products';
 import { TransactionController } from '../../features/transactions';
 import { UserController } from '../../features/users';
-import { ErrorHandler } from '../middlewares/error-handler';
+import { ErrorHandler } from '../middlewares';
 
 export const loadExpress = (): express.Application => {
   // Create Express app.
