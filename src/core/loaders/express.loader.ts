@@ -4,13 +4,13 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { useContainer, useExpressServer } from 'routing-controllers';
-import { OrderController } from '../../features/orders';
-import { OrderItemController } from '../../features/order-items';
-import { ProductController } from '../../features/products';
-import { TransactionController } from '../../features/transactions';
 import { UsersController } from '../../features/users';
-import { ErrorHandler } from '../middlewares';
+import { TransactionsController } from '../../features/transactions';
+import { ProductsController } from '../../features/products';
+import { OrdersController } from '../../features/orders';
+import { OrderItemsController } from '../../features/order-items';
 import { CommonsController } from '../controllers';
+import { ErrorHandler } from '../middlewares';
 
 export const loadExpress = (): express.Application => {
   // Create Express app.
@@ -42,10 +42,10 @@ export const loadExpress = (): express.Application => {
     validation: false,
     controllers: [
       UsersController,
-      TransactionController,
-      ProductController,
-      OrderController,
-      OrderItemController,
+      TransactionsController,
+      ProductsController,
+      OrdersController,
+      OrderItemsController,
       CommonsController,
     ],
     middlewares: [ErrorHandler],

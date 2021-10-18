@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { encrypt, lowercase } from '../../../core/utils/value-transformers';
-import { Transaction } from '../../transactions/entities';
+import { Transaction } from '../../transactions';
 
 export enum Role {
   Admin = 'admin',

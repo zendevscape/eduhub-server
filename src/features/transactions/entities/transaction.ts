@@ -1,5 +1,12 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../users/entities';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../users';
 
 export enum TransactionType {
   Credit = 'credit',
@@ -18,6 +25,9 @@ export class Transaction {
   public id: string;
 
   @ManyToOne(() => User, (user) => user.transactions)
+  @JoinColumn({
+    name: 'user_id',
+  })
   public user: User;
 
   @CreateDateColumn()

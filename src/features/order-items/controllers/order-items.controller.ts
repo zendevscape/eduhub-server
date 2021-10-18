@@ -1,13 +1,13 @@
 import { JsonController } from 'routing-controllers';
 import { Inject, Service } from 'typedi';
-import { AuthService } from '../services';
+import { OrderItemsService } from '../services';
 
 @Service()
-@JsonController('/auth')
-export class AuthController {
+@JsonController('/order-items')
+export class OrderItemsController {
   constructor(
     @Inject()
-    private readonly authService: AuthService,
+    private readonly orderItemsService: OrderItemsService,
   ) {}
 
   // TODO: add routes handler.

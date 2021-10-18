@@ -1,1 +1,1 @@
-export * from './order-item.controller';
+export * from './order-items.controller';

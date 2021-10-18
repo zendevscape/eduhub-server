@@ -4,6 +4,11 @@ import { Service } from 'typedi';
 import { Product } from '../entities';
 
 @Service()
-export class ProductService {
-  constructor(@InjectRepository(Product) private readonly productRepository: Repository<Product>) {}
+export class ProductsService {
+  constructor(
+    @InjectRepository(Product)
+    private readonly productsRepository: Repository<Product>,
+  ) {}
+
+  // TODO: add services.
 }

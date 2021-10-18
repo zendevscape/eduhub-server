@@ -1,1 +1,1 @@
-export * from './transaction.service';
+export * from './transactions.service';

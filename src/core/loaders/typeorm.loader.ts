@@ -1,6 +1,5 @@
 import Container from 'typedi';
 import { Connection, ConnectionOptions, createConnection, useContainer } from 'typeorm';
-
 import config from '../config';
 import { Admin, Guardian, Seller, Student, User } from '../../features/users';
 import { Transaction } from '../../features/transactions';
@@ -20,7 +19,7 @@ export const loadTypeOrm = async (): Promise<Connection> => {
     database: config.database.database,
     synchronize: config.database.syncronize,
     logging: config.database.logging,
-    entities: [Admin, Guardian, Order, OrderItem, Product, Seller, Student, Transaction, User],
+    entities: [User, Admin, Guardian, Seller, Student, Transaction, Product, Order, OrderItem],
   };
 
   // Set container.
