@@ -5,7 +5,7 @@ import { ProductsService } from '../services';
 @Service()
 @JsonController('/products')
 export class ProductsController {
-  constructor(
+  public constructor(
     @Inject()
     private readonly productsService: ProductsService,
   ) {}

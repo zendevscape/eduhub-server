@@ -68,7 +68,7 @@ import {
 @Service()
 @JsonController()
 export class UsersController {
-  constructor(
+  public constructor(
     @Inject()
     private readonly usersService: UsersService,
   ) {}
@@ -76,7 +76,7 @@ export class UsersController {
   @Post('/admins')
   @HttpCode(201)
   @UseBefore(celebrate(createAdminsSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async createAdmins(
+  public async createAdmins(
     @Body()
     body: CreateAdminBodyReq[],
   ): Promise<Response<CreateAdminsRes>> {
@@ -94,7 +94,7 @@ export class UsersController {
   @Post('/guardians')
   @HttpCode(201)
   @UseBefore(celebrate(createGuardiansSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async createGuardians(
+  public async createGuardians(
     @Body()
     body: CreateGuardianBodyReq[],
   ): Promise<Response<CreateGuardiansRes>> {
@@ -112,7 +112,7 @@ export class UsersController {
   @Post('/sellers')
   @HttpCode(201)
   @UseBefore(celebrate(createSellersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async createSellers(
+  public async createSellers(
     @Body()
     body: CreateSellerBodyReq[],
   ): Promise<Response<CreateSellersRes>> {
@@ -130,7 +130,7 @@ export class UsersController {
   @Post('/students')
   @HttpCode(201)
   @UseBefore(celebrate(createStudentsSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async createStudents(
+  public async createStudents(
     @Body()
     body: CreateStudentBodyReq[],
   ): Promise<Response<CreateStudentsRes>> {
@@ -146,7 +146,7 @@ export class UsersController {
   }
 
   @Get('/admins')
-  async readAdmins(): Promise<Response<ReadAdminsRes>> {
+  public async readAdmins(): Promise<Response<ReadAdminsRes>> {
     const results = await this.usersService.readAdmins();
 
     return {
@@ -160,7 +160,7 @@ export class UsersController {
   }
 
   @Get('/guardians')
-  async readGuardians(): Promise<Response<ReadGuardiansRes>> {
+  public async readGuardians(): Promise<Response<ReadGuardiansRes>> {
     const results = await this.usersService.readGuardians();
 
     return {
@@ -173,7 +173,7 @@ export class UsersController {
   }
 
   @Get('/sellers')
-  async readSellers(): Promise<Response<ReadSellersRes>> {
+  public async readSellers(): Promise<Response<ReadSellersRes>> {
     const results = await this.usersService.readSellers();
 
     return {
@@ -186,7 +186,7 @@ export class UsersController {
   }
 
   @Get('/students')
-  async readStudents(): Promise<Response<ReadStudentsRes>> {
+  public async readStudents(): Promise<Response<ReadStudentsRes>> {
     const results = await this.usersService.readStudents();
 
     return {
@@ -200,7 +200,7 @@ export class UsersController {
 
   @Get('/admins/:id')
   @UseBefore(celebrate(readUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async readAdmin(
+  public async readAdmin(
     @Params()
     params: ReadUserParamsReq,
   ): Promise<Response<ReadAdminRes>> {
@@ -217,7 +217,7 @@ export class UsersController {
 
   @Get('/guardians/:id')
   @UseBefore(celebrate(readUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async readGuardian(
+  public async readGuardian(
     @Params()
     params: ReadUserParamsReq,
   ): Promise<Response<ReadGuardianRes>> {
@@ -234,7 +234,7 @@ export class UsersController {
 
   @Get('/sellers/:id')
   @UseBefore(celebrate(readUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async readSeller(
+  public async readSeller(
     @Params()
     params: ReadUserParamsReq,
   ): Promise<Response<ReadSellerRes>> {
@@ -251,7 +251,7 @@ export class UsersController {
 
   @Get('/students/:id')
   @UseBefore(celebrate(readUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async readStudent(
+  public async readStudent(
     @Params()
     params: ReadUserParamsReq,
   ): Promise<Response<ReadStudentRes>> {
@@ -268,7 +268,7 @@ export class UsersController {
 
   @Patch('/admins')
   @UseBefore(celebrate(updateAdminsSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateAdmins(
+  public async updateAdmins(
     @Body()
     body: UpdateAdminBodyReq[],
   ): Promise<Response<UpdateAdminsRes>> {
@@ -285,7 +285,7 @@ export class UsersController {
 
   @Patch('/guardians')
   @UseBefore(celebrate(updateGuardiansSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateGuardians(
+  public async updateGuardians(
     @Body()
     body: UpdateGuardianBodyReq[],
   ): Promise<Response<UpdateGuardiansRes>> {
@@ -302,7 +302,7 @@ export class UsersController {
 
   @Patch('/sellers')
   @UseBefore(celebrate(updateSellersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateSellers(
+  public async updateSellers(
     @Body()
     body: UpdateSellerBodyReq[],
   ): Promise<Response<UpdateSellersRes>> {
@@ -319,7 +319,7 @@ export class UsersController {
 
   @Patch('/students')
   @UseBefore(celebrate(updateStudentsSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateStudents(
+  public async updateStudents(
     @Body()
     body: UpdateStudentBodyReq[],
   ): Promise<Response<UpdateStudentsRes>> {
@@ -336,7 +336,7 @@ export class UsersController {
 
   @Patch('/admins/:id')
   @UseBefore(celebrate(updateAdminSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateAdmin(
+  public async updateAdmin(
     @Params()
     params: UpdateUserParamsReq,
     @Body()
@@ -355,7 +355,7 @@ export class UsersController {
 
   @Patch('/guardians/:id')
   @UseBefore(celebrate(updateGuardianSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateGuardian(
+  public async updateGuardian(
     @Params()
     params: UpdateUserParamsReq,
     @Body()
@@ -374,7 +374,7 @@ export class UsersController {
 
   @Patch('/sellers/:id')
   @UseBefore(celebrate(updateSellerSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateSeller(
+  public async updateSeller(
     @Params()
     params: UpdateUserParamsReq,
     @Body()
@@ -393,7 +393,7 @@ export class UsersController {
 
   @Patch('/students/:id')
   @UseBefore(celebrate(updateStudentSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async updateStudent(
+  public async updateStudent(
     @Params()
     params: UpdateUserParamsReq,
     @Body()
@@ -412,7 +412,7 @@ export class UsersController {
 
   @Delete('/admins')
   @UseBefore(celebrate(deleteUsersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteAdmins(
+  public async deleteAdmins(
     @Body()
     body: DeleteUserBodyReq[],
   ): Promise<Response<void>> {
@@ -426,7 +426,7 @@ export class UsersController {
 
   @Delete('/guardians')
   @UseBefore(celebrate(deleteUsersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteGuardians(
+  public async deleteGuardians(
     @Body()
     body: DeleteUserBodyReq[],
   ): Promise<Response<void>> {
@@ -440,7 +440,7 @@ export class UsersController {
 
   @Delete('/sellers')
   @UseBefore(celebrate(deleteUsersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteSellers(
+  public async deleteSellers(
     @Body()
     body: DeleteUserBodyReq[],
   ): Promise<Response<void>> {
@@ -454,7 +454,7 @@ export class UsersController {
 
   @Delete('/students')
   @UseBefore(celebrate(deleteUsersSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteStudents(
+  public async deleteStudents(
     @Body()
     body: DeleteUserBodyReq[],
   ): Promise<Response<void>> {
@@ -468,7 +468,7 @@ export class UsersController {
 
   @Delete('/admins/:id')
   @UseBefore(celebrate(deleteUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteAdmin(
+  public async deleteAdmin(
     @Params()
     params: DeleteUserParamsReq,
   ): Promise<Response<void>> {
@@ -482,7 +482,7 @@ export class UsersController {
 
   @Delete('/guardians/:id')
   @UseBefore(celebrate(deleteUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteGuardian(
+  public async deleteGuardian(
     @Params()
     params: DeleteUserParamsReq,
   ): Promise<Response<void>> {
@@ -496,7 +496,7 @@ export class UsersController {
 
   @Delete('/sellers/:id')
   @UseBefore(celebrate(deleteUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteSeller(
+  public async deleteSeller(
     @Params()
     params: DeleteUserParamsReq,
   ): Promise<Response<void>> {
@@ -510,7 +510,7 @@ export class UsersController {
 
   @Delete('/students/:id')
   @UseBefore(celebrate(deleteUserSchema, { abortEarly: false }, { mode: Modes.FULL }))
-  async deleteStudent(
+  public async deleteStudent(
     @Params()
     params: DeleteUserParamsReq,
   ): Promise<Response<void>> {

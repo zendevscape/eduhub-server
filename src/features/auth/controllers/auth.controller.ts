@@ -5,7 +5,7 @@ import { AuthService } from '../services';
 @Service()
 @JsonController('/auth')
 export class AuthController {
-  constructor(
+  public constructor(
     @Inject()
     private readonly authService: AuthService,
   ) {}

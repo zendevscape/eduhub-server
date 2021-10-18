@@ -5,7 +5,7 @@ import { Transaction } from '../entities';
 
 @Service()
 export class TransactionsService {
-  constructor(
+  public constructor(
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
   ) {}

@@ -5,7 +5,7 @@ import { Order } from '../entities';
 
 @Service()
 export class OrdersService {
-  constructor(
+  public constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
   ) {}

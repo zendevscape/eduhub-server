@@ -24,7 +24,7 @@ import { hashPassword } from '../../../core/utils/password';
 
 @Service()
 export class UsersService {
-  constructor(
+  public constructor(
     @InjectRepository(Admin)
     private readonly adminsRepository: Repository<Admin>,
 

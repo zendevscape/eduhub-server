@@ -1,9 +1,9 @@
 import { Response } from '../types';
 
 export abstract class HttpError extends Error {
-  httpCode: number;
+  public httpCode: number;
 
-  constructor(httpCode: number, message?: string) {
+  public constructor(httpCode: number, message?: string) {
     super(message);
     Object.setPrototypeOf(this, HttpError.prototype);
     this.httpCode = httpCode;

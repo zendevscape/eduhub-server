@@ -5,7 +5,7 @@ import { Admin, Guardian, Seller, Student } from '../../users';
 
 @Service()
 export class AuthService {
-  constructor(
+  public constructor(
     @InjectRepository(Admin)
     private readonly adminsRepository: Repository<Admin>,
 

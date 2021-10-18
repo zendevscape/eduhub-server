@@ -4,7 +4,7 @@ import { Response } from '../types';
 export class NotAcceptableError extends HttpError {
   public data: unknown;
 
-  constructor(message?: string, data?: unknown) {
+  public constructor(message?: string, data?: unknown) {
     super(406);
     Object.setPrototypeOf(this, NotAcceptableError.prototype);
     this.message = message ?? 'Not acceptable.';

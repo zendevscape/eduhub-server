@@ -4,7 +4,7 @@ import { Response } from '../types';
 export class NotFoundError extends HttpError {
   public data: undefined;
 
-  constructor(message?: string, data?: undefined) {
+  public constructor(message?: string, data?: undefined) {
     super(404);
     Object.setPrototypeOf(this, NotFoundError.prototype);
     this.message = message ?? 'Not found.';
