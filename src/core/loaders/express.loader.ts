@@ -4,6 +4,7 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { useContainer, useExpressServer } from 'routing-controllers';
+import { AuthController } from '../../features/auth';
 import { UsersController } from '../../features/users';
 import { TransactionsController } from '../../features/transactions';
 import { ProductsController } from '../../features/products';
@@ -41,6 +42,7 @@ export const loadExpress = (): express.Application => {
     classTransformer: false,
     validation: false,
     controllers: [
+      AuthController,
       UsersController,
       TransactionsController,
       ProductsController,
