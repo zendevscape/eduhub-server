@@ -1,5 +1,6 @@
 import { CelebrateError } from 'celebrate';
 import { Errback, NextFunction, Request, Response } from 'express';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { Middleware, ExpressErrorMiddlewareInterface } from 'routing-controllers';
 import { Service } from 'typedi';
 import { EntityNotFoundError, QueryFailedError } from 'typeorm';
@@ -40,6 +41,16 @@ export class ErrorHandler implements ExpressErrorMiddlewareInterface {
       response.status(400).json({
         success: false,
         message: error.message + '.',
+      });
+    } else if (error instanceof TokenExpiredError) {
+      response.status(401).json({
+        success: false,
+        message: 'User credentials expired.',
+      });
+    } else if (error instanceof JsonWebTokenError) {
+      response.status(401).json({
+        success: false,
+        message: 'User credentials invalid.',
       });
     } else if (error instanceof HttpError) {
       response.status(error.httpCode).json(error.toJson());
