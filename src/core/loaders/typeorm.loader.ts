@@ -10,8 +10,7 @@ import { OrderItem } from '../../features/order-items';
 export const loadTypeOrm = async (): Promise<Connection> => {
   // Set connection options.
   const connectionOptions: ConnectionOptions = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    type: config.database.type as any,
+    type: config.database.type,
     host: config.database.host,
     port: config.database.port,
     username: config.database.username,

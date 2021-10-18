@@ -1,22 +1,53 @@
 import dotenv from 'dotenv';
+import Joi from 'joi';
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+dotenv.config();
 
-const envFound = dotenv.config();
-if (!envFound) {
-  // Throw generic error
-  throw new Error("Couldn't find .env file");
+const { value: env, error } = Joi.object()
+  .keys({
+    NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
+    PORT: Joi.number().default(3000),
+    JWT_SECRET: Joi.string().required(),
+    JWT_ACCESS_TOKEN_EXPIRATION: Joi.number().default(24),
+    JWT_REFRESH_TOKEN_EXPIRATION: Joi.number().default(30),
+    TYPEORM_TYPE: Joi.string().required(),
+    TYPEORM_HOST: Joi.string().required(),
+    TYPEORM_PORT: Joi.number().required(),
+    TYPEORM_USERNAME: Joi.string().required(),
+    TYPEORM_PASSWORD: Joi.string().required(),
+    TYPEORM_DATABASE: Joi.string().required(),
+    TYPEORM_SYNCHRONIZE: Joi.boolean().default(false),
+    TYPEORM_LOGGING: Joi.boolean().default(false),
+  })
+  .unknown(true)
+  .validate(process.env);
+
+if (error) {
+  throw new Error(`Config validation failed, ${error.message}.`);
 }
 
 export default {
   /**
    *  Application port.
    */
-  port: process.env.PORT,
+  port: env.PORT,
   /**
-   * JWT secret.
+   * JWT options.
    */
-  jwtSecret: process.env.JWT_SECRET,
+  jwt: {
+    /**
+     * JWT secret.
+     */
+    secret: env.JWT_SECRET,
+    /**
+     * JWT access token expiration in hours.
+     */
+    accessTokenExpiration: env.JWT_ACCESS_TOKEN_EXPIRATION,
+    /**
+     * JWT refresh token expiration in days.
+     */
+    refreshTokenExpiration: env.JWT_REFRESH_TOKEN_EXPIRATION,
+  },
   /**
    * Database connection options.
    */
@@ -24,38 +55,38 @@ export default {
     /**
      * Database type.
      */
-    type: process.env.TYPEORM_TYPE,
+    type: env.TYPEORM_TYPE,
     /**
      * Database URL.
      */
-    url: process.env.TYPEORM_HOST,
+    url: env.TYPEORM_HOST,
     /**
      * Database host.
      */
-    host: process.env.TYPEORM_HOST,
+    host: env.TYPEORM_HOST,
     /**
      * Database host port.
      */
-    port: Number.parseInt(process.env.TYPEORM_PORT ?? '3306'),
+    port: env.TYPEORM_PORT,
     /**
      * Database username.
      */
-    username: process.env.TYPEORM_USERNAME,
+    username: env.TYPEORM_USERNAME,
     /**
      * Database password.
      */
-    password: process.env.TYPEORM_PASSWORD,
+    password: env.TYPEORM_PASSWORD,
     /**
      * Database name.
      */
-    database: process.env.TYPEORM_DATABASE,
+    database: env.TYPEORM_DATABASE,
     /**
      * Database synchronization.
      */
-    syncronize: process.env.TYPEORM_SYNCHRONIZE === 'true' ?? false,
+    syncronize: env.TYPEORM_SYNCHRONIZE,
     /**
      * Database logging.
      */
-    logging: process.env.TYPEORM_LOGGING === 'true' ?? false,
+    logging: env.TYPEORM_LOGGING,
   },
 };
