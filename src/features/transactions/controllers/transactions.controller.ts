@@ -1,14 +1,9 @@
-import { JsonController } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
+import { Controller } from '@nestjs/common';
 import { TransactionsService } from '../services';
 
-@Service()
-@JsonController('/transactions')
+@Controller('transactions')
 export class TransactionsController {
-  public constructor(
-    @Inject()
-    private readonly transactionsService: TransactionsService,
-  ) {}
+  public constructor(private readonly transactionsService: TransactionsService) {}
 
   // TODO: add more endpoint.
 }

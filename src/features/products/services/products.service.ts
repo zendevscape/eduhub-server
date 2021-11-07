@@ -1,9 +1,9 @@
-import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Service } from 'typedi';
 import { Product } from '../entities';
 
-@Service()
+@Injectable()
 export class ProductsService {
   public constructor(
     @InjectRepository(Product)

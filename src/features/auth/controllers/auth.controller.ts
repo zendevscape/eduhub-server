@@ -1,32 +1,25 @@
-import { Body, Delete, JsonController, Post, Put, UseBefore } from 'routing-controllers';
-import { celebrate, Modes } from 'celebrate';
-import { Inject, Service } from 'typedi';
-import { Response } from '../../../core/types';
+import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
+import { Response, ValidationPipe } from '../../../core';
 import { AuthService } from '../services';
 import {
   AccessTokenRes,
   CreateAccessTokenBodyReq,
   DeleteRefreshTokenBodyReq,
   UpdateAccessTokenBodyReq,
-} from '../types';
+} from '../dtos';
 import {
   createAccessTokenSchema,
   deleteRefreshTokenSchema,
   updateAccessTokenSchema,
 } from '../validations';
 
-@Service()
-@JsonController('/auth')
+@Controller('auth')
 export class AuthController {
-  public constructor(
-    @Inject()
-    private readonly authService: AuthService,
-  ) {}
+  public constructor(private readonly authService: AuthService) {}
 
-  @Post('/')
-  @UseBefore(celebrate(createAccessTokenSchema, { abortEarly: false }, { mode: Modes.FULL }))
+  @Post()
   public async createAccessToken(
-    @Body()
+    @Body(new ValidationPipe(createAccessTokenSchema.body))
     body: CreateAccessTokenBodyReq,
   ): Promise<Response<AccessTokenRes>> {
     const result = await this.authService.createAccessToken(body);
@@ -38,10 +31,9 @@ export class AuthController {
     };
   }
 
-  @Put('/')
-  @UseBefore(celebrate(updateAccessTokenSchema, { abortEarly: false }, { mode: Modes.FULL }))
+  @Put()
   public async updateAccessToken(
-    @Body()
+    @Body(new ValidationPipe(updateAccessTokenSchema.body))
     body: UpdateAccessTokenBodyReq,
   ): Promise<Response<AccessTokenRes>> {
     const result = await this.authService.updateAccessToken(body);
@@ -53,10 +45,9 @@ export class AuthController {
     };
   }
 
-  @Delete('/')
-  @UseBefore(celebrate(deleteRefreshTokenSchema, { abortEarly: false }, { mode: Modes.FULL }))
+  @Delete()
   public async deleteRefreshToken(
-    @Body()
+    @Body(new ValidationPipe(deleteRefreshTokenSchema.body))
     body: DeleteRefreshTokenBodyReq,
   ): Promise<Response<void>> {
     await this.authService.deleteRefreshToken(body);

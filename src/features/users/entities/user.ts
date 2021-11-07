@@ -7,7 +7,7 @@ import {
   TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
-import { encrypt, lowercase } from '../../../core/utils/value-transformers';
+import { encrypt, lowercase } from '../../../core';
 import { Transaction } from '../../transactions';
 
 export enum Role {

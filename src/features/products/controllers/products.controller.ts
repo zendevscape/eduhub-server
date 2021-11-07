@@ -1,14 +1,9 @@
-import { JsonController } from 'routing-controllers';
-import { Inject, Service } from 'typedi';
+import { Controller } from '@nestjs/common';
 import { ProductsService } from '../services';
 
-@Service()
-@JsonController('/products')
+@Controller('products')
 export class ProductsController {
-  public constructor(
-    @Inject()
-    private readonly productsService: ProductsService,
-  ) {}
+  public constructor(private readonly productsService: ProductsService) {}
 
   // TODO: add routes handler.
 }

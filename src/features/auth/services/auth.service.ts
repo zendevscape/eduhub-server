@@ -1,24 +1,28 @@
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
-import { InjectRepository } from 'typeorm-typedi-extensions';
+import { ConfigService } from '@nestjs/config';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Service } from 'typedi';
-import config from '../../../core/config';
-import { Token, TokenType } from '../entities';
+import { PasswordService, TokenService } from '../../../core';
 import { Admin, Guardian, Role, Seller, Student, User } from '../../users';
+import { Token, TokenType } from '../entities';
 import {
   AccessTokenRes,
   CreateAccessTokenBodyReq,
   DeleteRefreshTokenBodyReq,
   UpdateAccessTokenBodyReq,
-} from '../types';
-import { NotFoundError, UnauthorizedError } from '../../../core/errors';
-import { verifyPassword } from '../../../core/utils/password';
-import { signToken, verifyToken } from '../../../core/utils/token';
+} from '../dtos';
 
-@Service()
+@Injectable()
 export class AuthService {
   public constructor(
+    private readonly configService: ConfigService,
+
+    private readonly passwordService: PasswordService,
+
+    private readonly tokenService: TokenService,
+
     @InjectRepository(Token)
     private readonly tokensRepository: Repository<Token>,
 
@@ -63,20 +67,23 @@ export class AuthService {
         );
         break;
       default:
-        throw new NotFoundError('User role invalid.');
+        throw new NotFoundException({
+          success: false,
+          message: 'User role invalid.',
+        });
     }
 
-    if (user && (await verifyPassword(credential.password, user.password))) {
-      const accessToken = signToken(
+    if (user && (await this.passwordService.verify(credential.password, user.password))) {
+      const accessToken = this.tokenService.sign(
         user.id,
-        moment().add(config.jwt.accessTokenExpiration, 'hours').unix(),
+        moment().add(this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
         TokenType.Access,
         credential.role,
       );
       const refreshTokenId = uuidv4();
-      const refreshToken = signToken(
+      const refreshToken = this.tokenService.sign(
         user.id,
-        moment().add(config.jwt.refreshTokenExpiration, 'days').unix(),
+        moment().add(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
         TokenType.Refresh,
         undefined,
         refreshTokenId,
@@ -96,25 +103,28 @@ export class AuthService {
         refreshToken,
       };
     } else {
-      throw new UnauthorizedError('User credentials invalid.');
+      throw new UnauthorizedException({
+        success: false,
+        message: 'User credentials invalid.',
+      });
     }
   }
 
   public async updateAccessToken(credential: UpdateAccessTokenBodyReq): Promise<AccessTokenRes> {
-    const payload = verifyToken(credential.refreshToken);
+    const payload = this.tokenService.verify(credential.refreshToken);
     const token = await this.tokensRepository.findOne({ id: payload.jti }, { relations: ['user'] });
 
     if (token && credential.refreshToken === token.token) {
-      const accessToken = signToken(
+      const accessToken = this.tokenService.sign(
         token.user.id,
-        moment().add(config.jwt.accessTokenExpiration, 'hours').unix(),
+        moment().add(this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
         TokenType.Access,
         token.user.role,
       );
       const refreshTokenId = uuidv4();
-      const refreshToken = signToken(
+      const refreshToken = this.tokenService.sign(
         token.user.id,
-        moment().add(config.jwt.refreshTokenExpiration, 'days').unix(),
+        moment().add(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
         TokenType.Refresh,
         undefined,
         refreshTokenId,
@@ -136,12 +146,15 @@ export class AuthService {
         refreshToken,
       };
     } else {
-      throw new UnauthorizedError('User credentials invalid.');
+      throw new UnauthorizedException({
+        success: false,
+        message: 'User credentials invalid.',
+      });
     }
   }
 
   public async deleteRefreshToken(credential: DeleteRefreshTokenBodyReq): Promise<void> {
-    const payload = verifyToken(credential.refreshToken);
+    const payload = this.tokenService.verify(credential.refreshToken);
     await this.tokensRepository.remove(
       await this.tokensRepository.findOneOrFail({ id: payload.jti }, { relations: ['user'] }),
     );
