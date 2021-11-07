@@ -6,9 +6,9 @@ export const createAdminsSchema = {
       Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(
-          new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'),
-        ),
+        password: Joi.string()
+          .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'))
+          .required(),
       }),
     )
     .max(50)
@@ -21,9 +21,9 @@ export const createGuardiansSchema = {
       Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(
-          new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'),
-        ),
+        password: Joi.string()
+          .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'))
+          .required(),
       }),
     )
     .max(50)
@@ -36,9 +36,9 @@ export const createSellersSchema = {
       Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(
-          new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'),
-        ),
+        password: Joi.string()
+          .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'))
+          .required(),
       }),
     )
     .max(50)
@@ -51,9 +51,9 @@ export const createStudentsSchema = {
       Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(
-          new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'),
-        ),
+        password: Joi.string()
+          .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d@$!%*?& ]{8,}$'))
+          .required(),
         guardianId: Joi.string().uuid().required(),
       }),
     )
