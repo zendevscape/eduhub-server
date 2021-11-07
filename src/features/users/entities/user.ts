@@ -50,7 +50,7 @@ export class User {
   })
   public password: string;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  @OneToMany('Transaction', 'user')
   public transactions: Transaction[];
 
   @Column({

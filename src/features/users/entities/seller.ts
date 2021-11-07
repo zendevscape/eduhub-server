@@ -4,6 +4,6 @@ import { Role, User } from './user';
 
 @ChildEntity(Role.Seller)
 export class Seller extends User {
-  @OneToMany(() => Product, (product) => product.seller)
+  @OneToMany('Product', 'seller')
   public products: Product[];
 }

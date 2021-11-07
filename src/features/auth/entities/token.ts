@@ -12,7 +12,7 @@ export class Token {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne('User')
   @JoinColumn({
     name: 'user_id',
   })

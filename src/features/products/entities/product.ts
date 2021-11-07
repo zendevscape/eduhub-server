@@ -7,7 +7,7 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @ManyToOne(() => Seller, (seller) => seller.products)
+  @ManyToOne('Seller', 'products')
   @JoinColumn({
     name: 'seller_id',
   })
@@ -25,6 +25,6 @@ export class Product {
   @Column()
   public stock: number;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+  @OneToMany('OrderItem', 'product')
   public orderItems: OrderItem[];
 }

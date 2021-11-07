@@ -21,13 +21,13 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @ManyToOne(() => Seller)
+  @ManyToOne('Seller')
   @JoinColumn({
     name: 'seller_id',
   })
   public seller: Seller;
 
-  @ManyToOne(() => Student)
+  @ManyToOne('Student')
   @JoinColumn({
     name: 'buyer_id',
   })
@@ -36,7 +36,7 @@ export class Order {
   @CreateDateColumn()
   public date: Date;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  @OneToMany('OrderItem', 'order')
   public orderItems: OrderItem[];
 
   @Column()

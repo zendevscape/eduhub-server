@@ -7,13 +7,13 @@ export class OrderItem {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @ManyToOne(() => Order, (order) => order.orderItems)
+  @ManyToOne('Order', 'orderItems')
   @JoinColumn({
     name: 'order_id',
   })
   public order: Order;
 
-  @ManyToOne(() => Product, (product) => product.orderItems)
+  @ManyToOne('Product', 'orderItems')
   @JoinColumn({
     name: 'product_id',
   })

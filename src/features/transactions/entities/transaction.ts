@@ -24,7 +24,7 @@ export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
-  @ManyToOne(() => User, (user) => user.transactions)
+  @ManyToOne('User', 'transactions')
   @JoinColumn({
     name: 'user_id',
   })

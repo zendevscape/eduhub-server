@@ -4,7 +4,7 @@ import { Role, User } from './user';
 
 @ChildEntity(Role.Student)
 export class Student extends User {
-  @ManyToOne(() => Guardian, (guardian) => guardian.students)
+  @ManyToOne('Guardian', 'students')
   @JoinColumn({
     name: 'guardian_id',
   })
