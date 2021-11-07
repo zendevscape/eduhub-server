@@ -6,7 +6,7 @@ export class ValidationPipe implements PipeTransform {
   public constructor(private readonly schema: AnySchema) {}
 
   public transform(value: unknown): unknown {
-    const { error } = this.schema.validate(value, { abortEarly: false });
+    const { value: validatedValue, error } = this.schema.validate(value, { abortEarly: false });
 
     if (error) {
       throw new BadRequestException({
@@ -20,7 +20,7 @@ export class ValidationPipe implements PipeTransform {
         }),
       });
     } else {
-      return value;
+      return validatedValue;
     }
   }
 }
