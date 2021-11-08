@@ -9,7 +9,7 @@ import { Order } from '../features/orders';
 import { Product } from '../features/products';
 import { Transaction } from '../features/transactions';
 import { Admin, Guardian, Seller, Student, User } from '../features/users';
-import { HttpExceptionFilter, TypeORMErrorFilter } from './filters';
+import { AnyExceptionFilter, HttpExceptionFilter, TypeORMErrorFilter } from './filters';
 import { PasswordService, TokenService } from './services';
 
 @Global()
@@ -65,6 +65,10 @@ import { PasswordService, TokenService } from './services';
   providers: [
     PasswordService,
     TokenService,
+    {
+      provide: APP_FILTER,
+      useClass: AnyExceptionFilter,
+    },
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
