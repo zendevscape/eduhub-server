@@ -63,7 +63,7 @@
     "reflect-metadata": "^0.1.13",
     "routing-controllers": "^0.9.0",
     "typedi": "^0.10.0",
-    "typeorm": "^0.2.38",
+    "typeorm": "^0.2.39",
     "typeorm-typedi-extensions": "^0.4.1",
     "uuid": "^8.3.2"
   }
