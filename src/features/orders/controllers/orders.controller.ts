@@ -1,9 +1,72 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Response, ValidationPipe } from '../../../core';
+import {
+  CreateOrdersBodyReq,
+  CreateOrdersParamsReq,
+  CreateOrdersRes,
+  ReadOrderParamsReq,
+  ReadOrderRes,
+  ReadOrdersParamsReq,
+  ReadOrdersRes,
+} from '../dtos';
 import { OrdersService } from '../services';
+import { createOrdersSchema, readOrderSchema, readOrdersSchema } from '../validations';
 
-@Controller('orders')
+@Controller()
 export class OrdersController {
   public constructor(private readonly ordersService: OrdersService) {}
 
-  // TODO: add routes handler.
+  @Post(['orders', 'sellers/:sellerId/orders'])
+  public async createOrders(
+    @Body(new ValidationPipe(createOrdersSchema.body))
+    body: CreateOrdersBodyReq,
+    @Param(new ValidationPipe(createOrdersSchema.params))
+    params: CreateOrdersParamsReq,
+  ): Promise<Response<CreateOrdersRes>> {
+    const results = await this.ordersService.createOrders(params, body);
+
+    return {
+      success: true,
+      message: 'Orders created.',
+      data: {
+        orders: results,
+      },
+    };
+  }
+
+  @Get([
+    'orders/:orderId',
+    'sellers/:sellerId/orders/:orderId',
+    'students/:studentId/orders/:orderId',
+  ])
+  public async readOrder(
+    @Param(new ValidationPipe(readOrderSchema.params))
+    params: ReadOrderParamsReq,
+  ): Promise<Response<ReadOrderRes>> {
+    const result = await this.ordersService.readOrder(params);
+
+    return {
+      success: true,
+      message: 'Order found.',
+      data: {
+        order: result,
+      },
+    };
+  }
+
+  @Get(['sellers/:sellerId/orders', 'students/:studentId/orders'])
+  public async readOrders(
+    @Param(new ValidationPipe(readOrdersSchema.params))
+    params: ReadOrdersParamsReq,
+  ): Promise<Response<ReadOrdersRes>> {
+    const results = await this.ordersService.readOrders(params);
+
+    return {
+      success: true,
+      message: 'Order found.',
+      data: {
+        orders: results,
+      },
+    };
+  }
 }
