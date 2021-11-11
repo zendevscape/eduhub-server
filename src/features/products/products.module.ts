@@ -9,5 +9,6 @@ import { ProductsService } from './services';
   imports: [forwardRef(() => UsersModule), TypeOrmModule.forFeature([Product])],
   providers: [ProductsService],
   controllers: [ProductsController],
+  exports: [TypeOrmModule],
 })
 export class ProductsModule {}
