@@ -76,14 +76,14 @@ export class AuthService {
     if (user && (await this.passwordService.verify(credential.password, user.password))) {
       const accessToken = this.tokenService.sign(
         user.id,
-        moment().add(this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
+        moment().add(this.configService.get<number>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
         TokenType.Access,
         credential.role,
       );
       const refreshTokenId = uuidv4();
       const refreshToken = this.tokenService.sign(
         user.id,
-        moment().add(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
+        moment().add(this.configService.get<number>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
         TokenType.Refresh,
         undefined,
         refreshTokenId,
@@ -117,14 +117,14 @@ export class AuthService {
     if (token && credential.refreshToken === token.token) {
       const accessToken = this.tokenService.sign(
         token.user.id,
-        moment().add(this.configService.get<string>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
+        moment().add(this.configService.get<number>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
         TokenType.Access,
         token.user.role,
       );
       const refreshTokenId = uuidv4();
       const refreshToken = this.tokenService.sign(
         token.user.id,
-        moment().add(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
+        moment().add(this.configService.get<number>('JWT_REFRESH_TOKEN_EXPIRATION'), 'days').unix(),
         TokenType.Refresh,
         undefined,
         refreshTokenId,
