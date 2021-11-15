@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { User } from '../../users';
 
@@ -30,6 +31,9 @@ export class Transaction {
   })
   public user: User;
 
+  @RelationId('user')
+  public userId: string;
+
   @CreateDateColumn()
   public date: Date;
 
@@ -40,7 +44,12 @@ export class Transaction {
   public type: TransactionType;
 
   @Column()
-  public change: number;
+  public amount: number;
+
+  @Column({
+    name: 'previous_balance',
+  })
+  public previousBalance: number;
 
   @Column()
   public balance: number;

@@ -1,7 +1,9 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Seller, Student } from '../../users';
+import { Transaction, TransactionStatus, TransactionType } from '../../transactions';
 import { Product } from '../../products';
 import { Order, OrderItem, OrderStatus } from '../entities';
 import {
@@ -21,6 +23,9 @@ export class OrdersService {
 
     @InjectRepository(Student)
     private readonly studentsRepository: Repository<Student>,
+
+    @InjectRepository(Transaction)
+    private readonly transactionsRepository: Repository<Transaction>,
 
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
@@ -44,6 +49,7 @@ export class OrdersService {
           let status = OrderStatus.Pending;
           let message = 'Orders created.';
           const stockRemainStatus: Array<boolean> = [];
+          const orderId = uuidv4();
 
           if (
             id.sellerId ||
@@ -90,6 +96,25 @@ export class OrdersService {
             status = OrderStatus.Failed;
             message = 'Products stock insufficient.';
           } else if (buyer.balance <= amount) {
+            await this.transactionsRepository.save({
+              user: buyer,
+              note: `Payment for order ID ${orderId}`,
+              type: TransactionType.Debit,
+              amount,
+              previousBalance: buyer.balance,
+              balance: buyer.balance,
+              status: TransactionStatus.Failed,
+            });
+            await this.transactionsRepository.save({
+              user: seller,
+              note: `Payment for order ID ${orderId}`,
+              type: TransactionType.Credit,
+              amount,
+              previousBalance: buyer.balance,
+              balance: buyer.balance,
+              status: TransactionStatus.Failed,
+            });
+
             status = OrderStatus.Failed;
             message = 'Buyer balance insufficient.';
           } else {
@@ -101,9 +126,27 @@ export class OrdersService {
                 });
               }),
             );
+            await this.transactionsRepository.save({
+              user: buyer,
+              note: `Payment for order ID ${orderId}`,
+              type: TransactionType.Debit,
+              amount,
+              previousBalance: buyer.balance,
+              balance: buyer.balance - amount,
+              status: TransactionStatus.Success,
+            });
             await this.studentsRepository.save({
               ...buyer,
               balance: buyer.balance - amount,
+            });
+            await this.transactionsRepository.save({
+              user: seller,
+              note: `Payment for order ID ${orderId}`,
+              type: TransactionType.Credit,
+              amount,
+              previousBalance: seller.balance,
+              balance: seller.balance + amount,
+              status: TransactionStatus.Success,
             });
             await this.sellersRepository.save({
               ...seller,
@@ -114,6 +157,7 @@ export class OrdersService {
           }
 
           return this.ordersRepository.create({
+            id: orderId,
             seller,
             buyer,
             amount,
