@@ -1,5 +1,5 @@
 import { ChildEntity, OneToMany } from 'typeorm';
-import { Product } from '../../products';
+import type { Product } from '../../products/entities';
 import { Role, User } from './user';
 
 @ChildEntity(Role.Seller)

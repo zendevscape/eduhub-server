@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PasswordService } from '../../../core';
+import { PasswordService } from '../../../core/services';
 import { Guardian, Student } from '../entities';
 import {
   CreateStudentBodyReq,

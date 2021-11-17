@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { Seller, Student } from '../../users';
-import { OrderItem } from './order-item';
+import type { Seller, Student } from '../../users/entities';
+import type { OrderItem } from './order-item';
 
 export enum OrderStatus {
   Success = 'success',

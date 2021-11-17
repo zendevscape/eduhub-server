@@ -3,11 +3,11 @@ import { APP_FILTER } from '@nestjs/core';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Token } from '../features/auth';
-import { Order, OrderItem } from '../features/orders';
-import { Product } from '../features/products';
-import { Transaction } from '../features/transactions';
-import { Admin, Guardian, Seller, Student, User } from '../features/users';
+import { Token } from '../features/auth/entities';
+import { Admin, Guardian, Seller, Student, User } from '../features/users/entities';
+import { Transaction } from '../features/transactions/entities';
+import { Product } from '../features/products/entities';
+import { Order, OrderItem } from '../features/orders/entities';
 import { AnyExceptionFilter, HttpExceptionFilter, TypeORMErrorFilter } from './filters';
 import { PasswordService, TokenService } from './services';
 

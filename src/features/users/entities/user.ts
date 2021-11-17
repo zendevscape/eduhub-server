@@ -7,8 +7,8 @@ import {
   TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
-import { encrypt, lowercase } from '../../../core';
-import { Transaction } from '../../transactions';
+import { encrypt, lowercase } from '../../../core/utils';
+import type { Transaction } from '../../transactions/entities';
 
 export enum Role {
   Admin = 'admin',

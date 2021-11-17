@@ -2,9 +2,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Seller, Student } from '../../users';
-import { Transaction, TransactionStatus, TransactionType } from '../../transactions';
-import { Product } from '../../products';
+import { Seller, Student } from '../../users/entities';
+import { Transaction, TransactionStatus, TransactionType } from '../../transactions/entities';
+import { Product } from '../../products/entities';
 import { Order, OrderItem, OrderStatus } from '../entities';
 import {
   CreateOrdersBodyReq,

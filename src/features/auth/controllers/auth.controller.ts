@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
-import { Response, ValidationPipe } from '../../../core';
+import { Response } from '../../../core/dtos';
+import { ValidationPipe } from '../../../core/pipes';
 import { AuthService } from '../services';
 import {
   AccessTokenRes,

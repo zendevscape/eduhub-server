@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../users';
+import type { User } from '../../users/entities';
 
 export enum TokenType {
   Access = 'access',

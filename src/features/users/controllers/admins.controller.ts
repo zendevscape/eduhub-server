@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { Response, ValidationPipe } from '../../../core';
+import { Response } from '../../../core/dtos';
+import { ValidationPipe } from '../../../core/pipes';
 import { AdminsService } from '../services';
 import {
   CreateAdminBodyReq,

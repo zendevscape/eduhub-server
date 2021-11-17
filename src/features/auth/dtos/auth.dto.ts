@@ -1,4 +1,4 @@
-import { Role } from '../../users';
+import { Role } from '../../users/entities';
 
 export interface CreateAccessTokenBodyReq {
   role: Role;

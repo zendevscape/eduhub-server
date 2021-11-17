@@ -2,8 +2,8 @@ import moment from 'moment';
 import jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { TokenType } from '../../features/auth';
-import { Role } from '../../features/users';
+import { TokenType } from '../../features/auth/entities';
+import { Role } from '../../features/users/entities';
 
 @Injectable()
 export class TokenService {

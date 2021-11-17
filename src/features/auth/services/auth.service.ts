@@ -4,8 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PasswordService, TokenService } from '../../../core';
-import { Admin, Guardian, Role, Seller, Student, User } from '../../users';
+import { PasswordService, TokenService } from '../../../core/services';
+import { Admin, Guardian, Role, Seller, Student, User } from '../../users/entities';
 import { Token, TokenType } from '../entities';
 import {
   AccessTokenRes,

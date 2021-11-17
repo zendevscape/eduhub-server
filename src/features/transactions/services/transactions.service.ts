@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Guardian, Seller, Student } from '../../users';
+import { Guardian, Seller, Student } from '../../users/entities';
 import {
   ReadTransactionParamsReq,
   ReadTransactionsParamsReq,

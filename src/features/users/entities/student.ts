@@ -1,6 +1,6 @@
 import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm';
-import { Guardian } from './guardian';
 import { Role, User } from './user';
+import type { Guardian } from './guardian';
 
 @ChildEntity(Role.Student)
 export class Student extends User {

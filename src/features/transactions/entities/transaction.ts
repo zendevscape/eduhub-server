@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { User } from '../../users';
+import type { User } from '../../users/entities';
 
 export enum TransactionType {
   Credit = 'credit',
