@@ -1,13 +1,16 @@
 import {
+  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   TableInheritance,
   UpdateDateColumn,
 } from 'typeorm';
 import { encrypt, lowercase } from '../../../core/utils';
+import type { Balance } from '../../finances/entities';
 import type { Transaction } from '../../transactions/entities';
 
 export enum Role {
@@ -53,10 +56,10 @@ export class User {
   @OneToMany('Transaction', 'user')
   public transactions: Transaction[];
 
-  @Column({
-    default: 0,
+  @OneToOne('Balance', 'user', {
+    cascade: ['remove', 'soft-remove', 'recover'],
   })
-  public balance: number;
+  public balance: Balance;
 
   @CreateDateColumn({
     name: 'created_time',
@@ -67,4 +70,11 @@ export class User {
     name: 'updated_time',
   })
   public updatedTime: Date;
+
+  @AfterLoad()
+  public readDefaultBalance(): void {
+    if (this.balance === null) {
+      this.balance = { user: this, userId: this.id, amount: 0 };
+    }
+  }
 }

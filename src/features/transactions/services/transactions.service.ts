@@ -36,6 +36,7 @@ export class TransactionsService {
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
         where: { user: guardian },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.sellerId) {
       const seller = await this.sellersRepository.findOneOrFail({
@@ -44,6 +45,7 @@ export class TransactionsService {
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
         where: { user: seller },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.studentId) {
       const student = await this.studentsRepository.findOneOrFail({
@@ -52,21 +54,27 @@ export class TransactionsService {
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
         where: { user: student },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else {
-      result = await this.transactionsRepository.findOneOrFail(id.transactionId);
+      result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
+      });
     }
 
     return {
       id: result.id,
       userId: result.userId,
-      date: result.date,
-      note: result.note,
       type: result.type,
       amount: result.amount,
       previousBalance: result.previousBalance,
       balance: result.balance,
+      note: result.note,
+      payment: result.payment,
+      transfer: result.sourceTransfer || result.destinationTransfer,
       status: result.status,
+      created: result.created,
+      updated: result.updated,
     };
   }
 
@@ -80,6 +88,7 @@ export class TransactionsService {
 
       results = await this.transactionsRepository.find({
         where: { user: guardian },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.sellerId) {
       const seller = await this.sellersRepository.findOneOrFail({
@@ -88,6 +97,7 @@ export class TransactionsService {
 
       results = await this.transactionsRepository.find({
         where: { user: seller },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.studentId) {
       const student = await this.studentsRepository.findOneOrFail({
@@ -96,6 +106,7 @@ export class TransactionsService {
 
       results = await this.transactionsRepository.find({
         where: { user: student },
+        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     }
 
@@ -103,13 +114,16 @@ export class TransactionsService {
       return {
         id: result.id,
         userId: result.userId,
-        date: result.date,
-        note: result.note,
         type: result.type,
         amount: result.amount,
         previousBalance: result.previousBalance,
         balance: result.balance,
+        note: result.note,
+        payment: result.payment,
+        transfer: result.sourceTransfer || result.destinationTransfer,
         status: result.status,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }

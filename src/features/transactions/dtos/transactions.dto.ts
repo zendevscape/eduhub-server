@@ -1,3 +1,4 @@
+import { Payment, Transfer } from '../../finances/entities';
 import { TransactionStatus, TransactionType } from '../entities';
 
 export interface ReadTransactionParamsReq {
@@ -16,13 +17,16 @@ export interface ReadTransactionsParamsReq {
 interface Transaction {
   id: string;
   userId: string;
-  date: Date;
-  note: string;
   type: TransactionType;
   amount: number;
   previousBalance: number;
   balance: number;
+  note: string;
+  payment?: Payment;
+  transfer?: Transfer;
   status: TransactionStatus;
+  created: Date;
+  updated: Date;
 }
 
 export interface TransactionRes extends Transaction {}

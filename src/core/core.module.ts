@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token } from '../features/auth/entities';
 import { Admin, Guardian, Seller, Student, User } from '../features/users/entities';
 import { Transaction } from '../features/transactions/entities';
+import { Balance, Payment, Transfer } from '../features/finances/entities';
+import { Callback } from '../features/callbacks/entities';
 import { Product } from '../features/products/entities';
 import { Order, OrderItem } from '../features/orders/entities';
 import { AnyExceptionFilter, HttpExceptionFilter, TypeORMErrorFilter } from './filters';
@@ -20,9 +22,6 @@ import { PasswordService, TokenService } from './services';
         .keys({
           NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
           PORT: Joi.number().default(3000),
-          JWT_SECRET: Joi.string().required(),
-          JWT_ACCESS_TOKEN_EXPIRATION: Joi.number().default(24),
-          JWT_REFRESH_TOKEN_EXPIRATION: Joi.number().default(30),
           TYPEORM_TYPE: Joi.string().required(),
           TYPEORM_HOST: Joi.string().required(),
           TYPEORM_PORT: Joi.number().required(),
@@ -31,6 +30,11 @@ import { PasswordService, TokenService } from './services';
           TYPEORM_DATABASE: Joi.string().required(),
           TYPEORM_SYNCHRONIZE: Joi.boolean().default(false),
           TYPEORM_LOGGING: Joi.boolean().default(false),
+          JWT_SECRET: Joi.string().required(),
+          JWT_ACCESS_TOKEN_EXPIRATION: Joi.number().default(24),
+          JWT_REFRESH_TOKEN_EXPIRATION: Joi.number().default(30),
+          XENDIT_API_KEY: Joi.string().required(),
+          XENDIT_CALLBACK_TOKEN: Joi.string().required(),
         })
         .unknown(true),
     }),
@@ -53,7 +57,11 @@ import { PasswordService, TokenService } from './services';
           Guardian,
           Seller,
           Student,
+          Balance,
           Transaction,
+          Payment,
+          Transfer,
+          Callback,
           Product,
           Order,
           OrderItem,

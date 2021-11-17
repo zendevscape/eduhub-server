@@ -3,6 +3,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Seller, Student } from '../../users/entities';
+import { Balance, Transfer, TransferStatus } from '../../finances/entities';
 import { Transaction, TransactionStatus, TransactionType } from '../../transactions/entities';
 import { Product } from '../../products/entities';
 import { Order, OrderItem, OrderStatus } from '../entities';
@@ -24,8 +25,14 @@ export class OrdersService {
     @InjectRepository(Student)
     private readonly studentsRepository: Repository<Student>,
 
+    @InjectRepository(Balance)
+    private readonly balancesRepository: Repository<Balance>,
+
     @InjectRepository(Transaction)
     private readonly transactionsRepository: Repository<Transaction>,
+
+    @InjectRepository(Transfer)
+    private readonly transfersRepository: Repository<Transfer>,
 
     @InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
@@ -56,8 +63,8 @@ export class OrdersService {
             order.sellerId ||
             (id.sellerId && order.sellerId && id.sellerId === order.sellerId)
           ) {
-            seller = await this.sellersRepository.findOneOrFail({
-              id: id.sellerId || order.sellerId,
+            seller = await this.sellersRepository.findOneOrFail(id.sellerId || order.sellerId, {
+              relations: ['balance'],
             });
           } else {
             throw new BadRequestException({
@@ -72,8 +79,8 @@ export class OrdersService {
             });
           }
 
-          const buyer = await this.studentsRepository.findOneOrFail({
-            id: order.buyerId,
+          const buyer = await this.studentsRepository.findOneOrFail(order.buyerId, {
+            relations: ['balance'],
           });
 
           const orderItems = await Promise.all(
@@ -95,24 +102,23 @@ export class OrdersService {
           if (stockRemainStatus.some((x) => x === false)) {
             status = OrderStatus.Failed;
             message = 'Products stock insufficient.';
-          } else if (buyer.balance <= amount) {
-            await this.transactionsRepository.save({
-              user: buyer,
+          } else if (buyer.balance.amount < amount) {
+            const sourceTransaction = await this.transactionsRepository.save({
+              user: { id: buyer.id },
               note: `Payment for order ID ${orderId}`,
               type: TransactionType.Debit,
               amount,
-              previousBalance: buyer.balance,
-              balance: buyer.balance,
+              previousBalance: buyer.balance.amount,
+              balance: buyer.balance.amount,
               status: TransactionStatus.Failed,
             });
-            await this.transactionsRepository.save({
-              user: seller,
-              note: `Payment for order ID ${orderId}`,
-              type: TransactionType.Credit,
+
+            await this.transfersRepository.save({
+              sourceUser: { id: buyer.id },
+              destinationUser: { id: seller.id },
+              sourceTransaction: { id: sourceTransaction.id },
               amount,
-              previousBalance: buyer.balance,
-              balance: buyer.balance,
-              status: TransactionStatus.Failed,
+              status: TransferStatus.Failed,
             });
 
             status = OrderStatus.Failed;
@@ -126,31 +132,43 @@ export class OrdersService {
                 });
               }),
             );
-            await this.transactionsRepository.save({
-              user: buyer,
+            await this.balancesRepository.save([
+              {
+                user: { id: buyer.id },
+                amount: buyer.balance.amount - amount,
+              },
+              {
+                user: { id: seller.id },
+                amount: seller.balance.amount + amount,
+              },
+            ]);
+
+            const sourceTransaction = await this.transactionsRepository.save({
+              user: { id: buyer.id },
               note: `Payment for order ID ${orderId}`,
               type: TransactionType.Debit,
               amount,
-              previousBalance: buyer.balance,
-              balance: buyer.balance - amount,
+              previousBalance: buyer.balance.amount,
+              balance: buyer.balance.amount - amount,
               status: TransactionStatus.Success,
             });
-            await this.studentsRepository.save({
-              ...buyer,
-              balance: buyer.balance - amount,
-            });
-            await this.transactionsRepository.save({
-              user: seller,
+            const destinationTransaction = await this.transactionsRepository.save({
+              user: { id: seller.id },
               note: `Payment for order ID ${orderId}`,
               type: TransactionType.Credit,
               amount,
-              previousBalance: seller.balance,
-              balance: seller.balance + amount,
+              previousBalance: seller.balance.amount,
+              balance: seller.balance.amount + amount,
               status: TransactionStatus.Success,
             });
-            await this.sellersRepository.save({
-              ...seller,
-              balance: seller.balance + amount,
+
+            await this.transfersRepository.save({
+              sourceUser: { id: buyer.id },
+              destinationUser: { id: seller.id },
+              sourceTransaction: { id: sourceTransaction.id },
+              destinationTransaction: { id: destinationTransaction.id },
+              amount: amount,
+              status: TransferStatus.Success,
             });
 
             status = OrderStatus.Success;
@@ -158,8 +176,8 @@ export class OrdersService {
 
           return this.ordersRepository.create({
             id: orderId,
-            seller,
-            buyer,
+            seller: { id: seller.id },
+            buyer: { id: buyer.id },
             amount,
             status,
             message,

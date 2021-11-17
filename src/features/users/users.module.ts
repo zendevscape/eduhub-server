@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FinancesModule } from '../finances';
 import { ProductsModule } from '../products';
 import { Admin, Guardian, Seller, Student, User } from './entities';
 import { AdminsService, GuardiansService, SellersService, StudentsService } from './services';
@@ -13,6 +14,7 @@ import {
 
 @Module({
   imports: [
+    forwardRef(() => FinancesModule),
     TypeOrmModule.forFeature([User, Admin, Guardian, Seller, Student]),
     RouterModule.register([
       {

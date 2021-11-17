@@ -4,10 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   RelationId,
+  UpdateDateColumn,
 } from 'typeorm';
 import type { User } from '../../users/entities';
+import type { Payment, Transfer } from '../../finances/entities';
 
 export enum TransactionType {
   Credit = 'credit',
@@ -34,9 +37,6 @@ export class Transaction {
   @RelationId('user')
   public userId: string;
 
-  @CreateDateColumn()
-  public date: Date;
-
   @Column()
   public note: string;
 
@@ -54,6 +54,30 @@ export class Transaction {
   @Column()
   public balance: number;
 
+  @OneToOne('Payment', 'transaction')
+  public payment: Payment;
+
+  @RelationId('payment')
+  public paymentId: string;
+
+  @OneToOne('Transfer', 'sourceTransaction')
+  public sourceTransfer: Transfer;
+
+  @RelationId('sourceTransfer')
+  public sourceTransferId: string;
+
+  @OneToOne('Transfer', 'destinationTransaction')
+  public destinationTransfer: Transfer;
+
+  @RelationId('destinationTransfer')
+  public destinationTransferId: string;
+
   @Column()
   public status: TransactionStatus;
+
+  @CreateDateColumn()
+  public created: Date;
+
+  @UpdateDateColumn()
+  public updated: Date;
 }
