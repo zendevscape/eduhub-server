@@ -11,13 +11,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Transaction, TransactionStatus } from '../../transactions/entities';
 import {
   Balance,
   Payment,
   PaymentChannelCategory,
   PaymentChannelCode,
   PaymentStatus,
+  Transaction,
+  TransactionStatus,
 } from '../../finances/entities';
 import { Callback } from '../../callbacks/entities';
 import { CreatePaymentReq, PaymentRes, ReceiveCallbacksReq } from '../dtos';

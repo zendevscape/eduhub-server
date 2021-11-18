@@ -10,8 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { encrypt, lowercase } from '../../../core/utils';
-import type { Balance } from '../../finances/entities';
-import type { Transaction } from '../../transactions/entities';
+import type { Balance, Transaction } from '../../finances/entities';
 
 export enum Role {
   Admin = 'admin',

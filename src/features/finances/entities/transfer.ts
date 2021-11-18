@@ -8,7 +8,7 @@ import {
   RelationId,
 } from 'typeorm';
 import type { User } from '../../users/entities';
-import type { Transaction } from '../../transactions/entities';
+import type { Transaction } from './transaction';
 
 export enum TransferStatus {
   Success = 'success',

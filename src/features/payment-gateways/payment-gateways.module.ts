@@ -2,18 +2,12 @@ import Xendit from 'xendit-node';
 import { ConfigService } from '@nestjs/config';
 import { forwardRef, Module } from '@nestjs/common';
 import { UsersModule } from '../users';
-import { TransactionsModule } from '../transactions';
 import { FinancesModule } from '../finances';
 import { CallbacksModule } from '../callbacks';
 import { PaymentGatewaysService, XenditService } from './services';
 
 @Module({
-  imports: [
-    forwardRef(() => UsersModule),
-    TransactionsModule,
-    forwardRef(() => FinancesModule),
-    CallbacksModule,
-  ],
+  imports: [forwardRef(() => UsersModule), forwardRef(() => FinancesModule), CallbacksModule],
   providers: [
     {
       inject: [ConfigService],

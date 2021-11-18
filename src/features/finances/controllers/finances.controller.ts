@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
 import {
@@ -8,11 +8,15 @@ import {
   CreateTransferBodyReq,
   CreateTransferParamsReq,
   CreateTransferRes,
+  ReadTransactionParamsReq,
+  ReadTransactionRes,
+  ReadTransactionsParamsReq,
+  ReadTransactionsRes,
   ReceiveCallbacksBodyReq,
   ReceiveCallbacksHeadersReq,
 } from '../dtos';
 import { FinancesService } from '../services';
-import { createPaymentSchema, createTransferSchema } from '../validations/finances.validation';
+import { createPaymentSchema, createTransferSchema, readTransactionSchema, readTransactionsSchema } from '../validations';
 
 @Controller()
 export class FinancesController {
@@ -74,6 +78,47 @@ export class FinancesController {
     return {
       success: true,
       message: 'Callback received.',
+    };
+  }
+
+  @Get([
+    'guardians/:guardianId/transactions',
+    'sellers/:sellerId/transactions',
+    'students/:studentId/transactions',
+  ])
+  public async readTransactions(
+    @Param(new ValidationPipe(readTransactionsSchema.params))
+    params: ReadTransactionsParamsReq,
+  ): Promise<Response<ReadTransactionsRes>> {
+    const results = await this.financesService.readTransactions(params);
+
+    return {
+      success: true,
+      message: results.length === 0 ? 'Transactions not found.' : 'Transactions found.',
+      data: {
+        transactions: results,
+      },
+    };
+  }
+
+  @Get([
+    'transactions/:transactionId',
+    'guardians/:guardianId/transactions/:transactionId',
+    'sellers/:sellerId/transactions/:transactionId',
+    'students/:studentId/transactions/:transactionId',
+  ])
+  public async readTransaction(
+    @Param(new ValidationPipe(readTransactionSchema.params))
+    params: ReadTransactionParamsReq,
+  ): Promise<Response<ReadTransactionRes>> {
+    const result = await this.financesService.readTransaction(params);
+
+    return {
+      success: true,
+      message: 'Transaction found.',
+      data: {
+        transaction: result,
+      },
     };
   }
 }

@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import type { User } from '../../users/entities';
-import type { Payment, Transfer } from '../../finances/entities';
+import type { Payment, Transfer } from '.';
 
 export enum TransactionType {
   Credit = 'credit',

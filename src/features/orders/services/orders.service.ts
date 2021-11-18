@@ -3,8 +3,14 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Seller, Student } from '../../users/entities';
-import { Balance, Transfer, TransferStatus } from '../../finances/entities';
-import { Transaction, TransactionStatus, TransactionType } from '../../transactions/entities';
+import {
+  Balance,
+  Transaction,
+  TransactionStatus,
+  TransactionType,
+  Transfer,
+  TransferStatus,
+} from '../../finances/entities';
 import { Product } from '../../products/entities';
 import { Order, OrderItem, OrderStatus } from '../entities';
 import {
