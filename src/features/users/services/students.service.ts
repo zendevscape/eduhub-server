@@ -29,14 +29,12 @@ export class StudentsService {
     const results = await this.studentsRepository.save(
       await Promise.all(
         students.map(async (student) => {
-          const guardian = await this.guardiansRepository.findOneOrFail({
-            id: student.guardianId,
-          });
+          const guardian = await this.guardiansRepository.findOneOrFail(student.guardianId);
 
           return this.studentsRepository.create({
             ...student,
             password: await this.passwordService.hash(student.password),
-            guardian: guardian,
+            guardian: { id: guardian.id },
           });
         }),
       ),
@@ -90,26 +88,19 @@ export class StudentsService {
     student: UpdateUserParamsReq,
     newStudent: UpdateStudentBodyReq,
   ): Promise<StudentRes> {
-    const oldStudent = await this.studentsRepository.findOneOrFail(
-      {
-        id: student.id,
-      },
-      {
-        relations: ['guardian'],
-      },
-    );
+    const oldStudent = await this.studentsRepository.findOneOrFail(student.id, {
+      relations: ['guardian'],
+    });
 
     const guardian = newStudent.guardianId
-      ? await this.guardiansRepository.findOneOrFail({
-          id: newStudent.guardianId,
-        })
+      ? await this.guardiansRepository.findOneOrFail(newStudent.guardianId)
       : oldStudent.guardian;
 
     const result = await this.studentsRepository.save(
       this.studentsRepository.create({
         ...oldStudent,
         ...newStudent,
-        guardian: guardian,
+        guardian: { id: guardian.id },
       }),
     );
 
@@ -127,25 +118,18 @@ export class StudentsService {
     const results = await this.studentsRepository.save(
       await Promise.all(
         students.map(async (student) => {
-          const oldStudent = await this.studentsRepository.findOneOrFail(
-            {
-              id: student.id,
-            },
-            {
-              relations: ['guardian'],
-            },
-          );
+          const oldStudent = await this.studentsRepository.findOneOrFail(student.id, {
+            relations: ['guardian'],
+          });
 
           const guardian = student.guardianId
-            ? await this.guardiansRepository.findOneOrFail({
-                id: student.guardianId,
-              })
+            ? await this.guardiansRepository.findOneOrFail(student.guardianId)
             : oldStudent.guardian;
 
           return this.studentsRepository.create({
             ...oldStudent,
             ...student,
-            guardian: guardian,
+            guardian: { id: guardian.id },
           });
         }),
       ),
@@ -164,20 +148,14 @@ export class StudentsService {
   }
 
   public async deleteStudent(student: DeleteUserParamsReq): Promise<void> {
-    await this.studentsRepository.remove(
-      await this.studentsRepository.findOneOrFail({
-        id: student.id,
-      }),
-    );
+    await this.studentsRepository.remove(await this.studentsRepository.findOneOrFail(student.id));
   }
 
   public async deleteStudents(students: DeleteUserBodyReq[]): Promise<void> {
     await this.studentsRepository.remove(
       await Promise.all(
         students.map(async (student) => {
-          return await this.studentsRepository.findOneOrFail({
-            id: student.id,
-          });
+          return await this.studentsRepository.findOneOrFail(student.id);
         }),
       ),
     );

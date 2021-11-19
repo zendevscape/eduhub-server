@@ -140,7 +140,7 @@ export class XenditService extends PaymentGatewaysService {
       });
     } else if (isVaPaidCallback(body)) {
       const callback = await this.callbacksRepository.findOne({
-        where: { payload_id: body.id },
+        where: { payloadId: body.id },
       });
 
       if (callback) {
@@ -155,6 +155,7 @@ export class XenditService extends PaymentGatewaysService {
         const payment = await this.paymentsRepository.findOneOrFail({
           where: { externalPaymentId: body.callback_virtual_account_id },
         });
+
         const transaction = await this.transactionsRepository.findOneOrFail(payment.transactionId);
 
         await this.balancesRepository.save({
@@ -174,7 +175,7 @@ export class XenditService extends PaymentGatewaysService {
         });
 
         await this.callbacksRepository.save({
-          payload_id: body.id,
+          payloadId: body.id,
           payload: JSON.stringify(body),
         });
       }

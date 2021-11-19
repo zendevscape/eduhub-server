@@ -7,8 +7,9 @@ export class Callback {
 
   @Column({
     unique: true,
+    name: 'payload_id',
   })
-  public payload_id: string;
+  public payloadId: string;
 
   @Column()
   public payload: string;

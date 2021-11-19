@@ -41,6 +41,7 @@ export class AuthService {
 
   public async createAccessToken(credential: CreateAccessTokenBodyReq): Promise<AccessTokenRes> {
     let user: User | undefined;
+
     switch (credential.role) {
       case Role.Admin:
         user = await this.adminsRepository.findOne(
@@ -73,7 +74,12 @@ export class AuthService {
         });
     }
 
-    if (user && (await this.passwordService.verify(credential.password, user.password))) {
+    if (!user || !(await this.passwordService.verify(credential.password, user.password))) {
+      throw new UnauthorizedException({
+        success: false,
+        message: 'User credentials invalid.',
+      });
+    } else {
       const accessToken = this.tokenService.sign(
         user.id,
         moment().add(this.configService.get<number>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
@@ -89,32 +95,30 @@ export class AuthService {
         refreshTokenId,
       );
 
-      await this.tokensRepository.save(
-        this.tokensRepository.create({
-          id: refreshTokenId,
-          user,
-          token: refreshToken,
-          type: TokenType.Refresh,
-        }),
-      );
+      await this.tokensRepository.save({
+        id: refreshTokenId,
+        user: { id: user.id },
+        token: refreshToken,
+        type: TokenType.Refresh,
+      });
 
       return {
         accessToken,
         refreshToken,
       };
-    } else {
-      throw new UnauthorizedException({
-        success: false,
-        message: 'User credentials invalid.',
-      });
     }
   }
 
   public async updateAccessToken(credential: UpdateAccessTokenBodyReq): Promise<AccessTokenRes> {
     const payload = this.tokenService.verify(credential.refreshToken);
-    const token = await this.tokensRepository.findOne({ id: payload.jti }, { relations: ['user'] });
+    const token = await this.tokensRepository.findOne(payload.jti, { relations: ['user'] });
 
-    if (token && credential.refreshToken === token.token) {
+    if (!token || credential.refreshToken !== token.token) {
+      throw new UnauthorizedException({
+        success: false,
+        message: 'User credentials invalid.',
+      });
+    } else {
       const accessToken = this.tokenService.sign(
         token.user.id,
         moment().add(this.configService.get<number>('JWT_ACCESS_TOKEN_EXPIRATION'), 'hours').unix(),
@@ -130,14 +134,12 @@ export class AuthService {
         refreshTokenId,
       );
 
-      await this.tokensRepository.save(
-        this.tokensRepository.create({
-          id: refreshTokenId,
-          user: token.user,
-          token: refreshToken,
-          type: TokenType.Refresh,
-        }),
-      );
+      await this.tokensRepository.save({
+        id: refreshTokenId,
+        user: { id: token.user.id },
+        token: refreshToken,
+        type: TokenType.Refresh,
+      });
 
       await this.tokensRepository.remove(token);
 
@@ -145,18 +147,14 @@ export class AuthService {
         accessToken,
         refreshToken,
       };
-    } else {
-      throw new UnauthorizedException({
-        success: false,
-        message: 'User credentials invalid.',
-      });
     }
   }
 
   public async deleteRefreshToken(credential: DeleteRefreshTokenBodyReq): Promise<void> {
     const payload = this.tokenService.verify(credential.refreshToken);
+
     await this.tokensRepository.remove(
-      await this.tokensRepository.findOneOrFail({ id: payload.jti }, { relations: ['user'] }),
+      await this.tokensRepository.findOneOrFail(payload.jti, { relations: ['user'] }),
     );
   }
 }

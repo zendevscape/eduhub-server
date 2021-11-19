@@ -33,16 +33,14 @@ export class ProductsService {
     id: CreateProductsParamsReq,
     products: CreateProductsBodyReq,
   ): Promise<ProductsRes> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     const results = await this.productsRepository.save(
       await Promise.all(
         products.map(async (product) => {
           return this.productsRepository.create({
             ...product,
-            seller: seller,
+            seller: { id: seller.id },
           });
         }),
       ),
@@ -61,12 +59,10 @@ export class ProductsService {
   }
 
   public async readProduct(id: ReadProductParamsReq): Promise<ProductRes> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     const result = await this.productsRepository.findOneOrFail(id.productId, {
-      where: { seller: seller },
+      where: { seller: { id: seller.id } },
       relations: ['seller'],
     });
 
@@ -81,12 +77,10 @@ export class ProductsService {
   }
 
   public async readProducts(id: ReadProductsParamsReq): Promise<ProductsRes> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     const results = await this.productsRepository.find({
-      where: { seller: seller },
+      where: { seller: { id: seller.id } },
       relations: ['seller'],
     });
 
@@ -106,14 +100,12 @@ export class ProductsService {
     id: UpdateProductParamsReq,
     product: UpdateProductBodyReq,
   ): Promise<ProductRes> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
-    const oldProduct = await this.productsRepository.findOneOrFail(
-      { id: id.productId },
-      { where: { seller: seller }, relations: ['seller'] },
-    );
+    const oldProduct = await this.productsRepository.findOneOrFail(id.productId, {
+      where: { seller: { id: seller.id } },
+      relations: ['seller'],
+    });
 
     const result = await this.productsRepository.save(
       this.productsRepository.create({
@@ -136,17 +128,15 @@ export class ProductsService {
     id: UpdateProductsParamsReq,
     products: UpdateProductsBodyReq,
   ): Promise<ProductsRes> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     const results = await this.productsRepository.save(
       await Promise.all(
         products.map(async (product) => {
-          const oldProduct = await this.productsRepository.findOneOrFail(
-            { id: product.id },
-            { where: { seller: seller }, relations: ['seller'] },
-          );
+          const oldProduct = await this.productsRepository.findOneOrFail(product.id, {
+            where: { seller: { id: seller.id } },
+            relations: ['seller'],
+          });
 
           return this.productsRepository.create({
             ...oldProduct,
@@ -169,15 +159,12 @@ export class ProductsService {
   }
 
   public async deleteProduct(id: DeleteProductParamsReq): Promise<void> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     await this.productsRepository.remove(
-      await this.productsRepository.findOneOrFail(
-        { id: id.productId },
-        { where: { seller: seller } },
-      ),
+      await this.productsRepository.findOneOrFail(id.productId, {
+        where: { seller: { id: seller.id } },
+      }),
     );
   }
 
@@ -185,17 +172,14 @@ export class ProductsService {
     id: DeleteProductsParamsReq,
     products: DeleteProductsBodyReq,
   ): Promise<void> {
-    const seller = await this.sellersRepository.findOneOrFail({
-      id: id.sellerId,
-    });
+    const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
     await this.productsRepository.remove(
       await Promise.all(
         products.map(async (product) => {
-          return await this.productsRepository.findOneOrFail(
-            { id: product.id },
-            { where: { seller: seller } },
-          );
+          return await this.productsRepository.findOneOrFail(product.id, {
+            where: { seller: { id: seller.id } },
+          });
         }),
       ),
     );

@@ -75,9 +75,7 @@ export class GuardiansService {
     guardian: UpdateUserParamsReq,
     newGuardian: UpdateGuardianBodyReq,
   ): Promise<GuardianRes> {
-    const oldGuardian = await this.guardiansRepository.findOneOrFail({
-      id: guardian.id,
-    });
+    const oldGuardian = await this.guardiansRepository.findOneOrFail(guardian.id);
 
     const result = await this.guardiansRepository.save(
       this.guardiansRepository.create({
@@ -99,9 +97,7 @@ export class GuardiansService {
     const results = await this.guardiansRepository.save(
       await Promise.all(
         guardians.map(async (guardian) => {
-          const oldGuardian = await this.guardiansRepository.findOneOrFail({
-            id: guardian.id,
-          });
+          const oldGuardian = await this.guardiansRepository.findOneOrFail(guardian.id);
 
           return this.guardiansRepository.create({
             ...oldGuardian,
@@ -124,9 +120,7 @@ export class GuardiansService {
 
   public async deleteGuardian(guardian: DeleteUserParamsReq): Promise<void> {
     await this.guardiansRepository.remove(
-      await this.guardiansRepository.findOneOrFail({
-        id: guardian.id,
-      }),
+      await this.guardiansRepository.findOneOrFail(guardian.id),
     );
   }
 
@@ -134,9 +128,7 @@ export class GuardiansService {
     await this.guardiansRepository.remove(
       await Promise.all(
         guardians.map(async (guardian) => {
-          return await this.guardiansRepository.findOneOrFail({
-            id: guardian.id,
-          });
+          return await this.guardiansRepository.findOneOrFail(guardian.id);
         }),
       ),
     );

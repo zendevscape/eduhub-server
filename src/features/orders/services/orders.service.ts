@@ -57,12 +57,12 @@ export class OrdersService {
     const results = await this.ordersRepository.save(
       await Promise.all(
         orders.map(async (order) => {
+          const stockRemainStatus: Array<boolean> = [];
+          const orderId = uuidv4();
           let seller = new Seller();
           let amount = 0;
           let status = OrderStatus.Pending;
           let message = 'Orders created.';
-          const stockRemainStatus: Array<boolean> = [];
-          const orderId = uuidv4();
 
           if (
             id.sellerId ||
@@ -91,9 +91,7 @@ export class OrdersService {
 
           const orderItems = await Promise.all(
             order.orderItems.map(async (orderItem) => {
-              const product = await this.productsRepository.findOneOrFail({
-                id: orderItem.productId,
-              });
+              const product = await this.productsRepository.findOneOrFail(orderItem.productId);
               amount += orderItem.quantity * product.price;
               stockRemainStatus.push(product.stock >= orderItem.quantity);
 
@@ -138,6 +136,7 @@ export class OrdersService {
                 });
               }),
             );
+
             await this.balancesRepository.save([
               {
                 user: { id: buyer.id },
@@ -158,6 +157,7 @@ export class OrdersService {
               balance: buyer.balance.amount - amount,
               status: TransactionStatus.Success,
             });
+
             const destinationTransaction = await this.transactionsRepository.save({
               user: { id: seller.id },
               note: `Payment for order ID ${orderId}`,
@@ -218,21 +218,17 @@ export class OrdersService {
     let result: Order = new Order();
 
     if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail({
-        id: id.sellerId,
-      });
+      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
       result = await this.ordersRepository.findOneOrFail(id.orderId, {
-        where: { seller },
+        where: { seller: { id: seller.id } },
         relations: ['orderItems'],
       });
     } else if (id.studentId) {
-      const buyer = await this.studentsRepository.findOneOrFail({
-        id: id.studentId,
-      });
+      const buyer = await this.studentsRepository.findOneOrFail(id.studentId);
 
       result = await this.ordersRepository.findOneOrFail(id.orderId, {
-        where: { buyer },
+        where: { buyer: { id: buyer.id } },
         relations: ['orderItems'],
       });
     } else {
@@ -264,21 +260,17 @@ export class OrdersService {
     let results: Array<Order> = [];
 
     if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail({
-        id: id.sellerId,
-      });
+      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
       results = await this.ordersRepository.find({
-        where: { seller },
+        where: { seller: { id: seller.id } },
         relations: ['orderItems'],
       });
     } else if (id.studentId) {
-      const buyer = await this.studentsRepository.findOneOrFail({
-        id: id.studentId,
-      });
+      const buyer = await this.studentsRepository.findOneOrFail(id.studentId);
 
       results = await this.ordersRepository.find({
-        where: { buyer },
+        where: { buyer: { id: buyer.id } },
         relations: ['orderItems'],
       });
     }

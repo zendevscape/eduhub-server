@@ -75,9 +75,7 @@ export class AdminsService {
     admin: UpdateUserParamsReq,
     newAdmin: UpdateAdminBodyReq,
   ): Promise<AdminRes> {
-    const oldAdmin = await this.adminsRepository.findOneOrFail({
-      id: admin.id,
-    });
+    const oldAdmin = await this.adminsRepository.findOneOrFail(admin.id);
 
     const result = await this.adminsRepository.save(
       this.adminsRepository.create({
@@ -99,9 +97,7 @@ export class AdminsService {
     const results = await this.adminsRepository.save(
       await Promise.all(
         admins.map(async (admin) => {
-          const oldAdmin = await this.adminsRepository.findOneOrFail({
-            id: admin.id,
-          });
+          const oldAdmin = await this.adminsRepository.findOneOrFail(admin.id);
 
           return this.adminsRepository.create({
             ...oldAdmin,
@@ -123,20 +119,14 @@ export class AdminsService {
   }
 
   public async deleteAdmin(admin: DeleteUserParamsReq): Promise<void> {
-    await this.adminsRepository.remove(
-      await this.adminsRepository.findOneOrFail({
-        id: admin.id,
-      }),
-    );
+    await this.adminsRepository.remove(await this.adminsRepository.findOneOrFail(admin.id));
   }
 
   public async deleteAdmins(admins: DeleteUserBodyReq[]): Promise<void> {
     await this.adminsRepository.remove(
       await Promise.all(
         admins.map(async (admin) => {
-          return await this.adminsRepository.findOneOrFail({
-            id: admin.id,
-          });
+          return await this.adminsRepository.findOneOrFail(admin.id);
         }),
       ),
     );

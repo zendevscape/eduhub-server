@@ -75,9 +75,7 @@ export class SellersService {
     seller: UpdateUserParamsReq,
     newSeller: UpdateSellerBodyReq,
   ): Promise<SellerRes> {
-    const oldSeller = await this.sellersRepository.findOneOrFail({
-      id: seller.id,
-    });
+    const oldSeller = await this.sellersRepository.findOneOrFail(seller.id);
 
     const result = await this.sellersRepository.save(
       this.sellersRepository.create({
@@ -99,9 +97,7 @@ export class SellersService {
     const results = await this.sellersRepository.save(
       await Promise.all(
         sellers.map(async (seller) => {
-          const oldSeller = await this.sellersRepository.findOneOrFail({
-            id: seller.id,
-          });
+          const oldSeller = await this.sellersRepository.findOneOrFail(seller.id);
 
           return this.sellersRepository.create({
             ...oldSeller,
@@ -123,20 +119,14 @@ export class SellersService {
   }
 
   public async deleteSeller(seller: DeleteUserParamsReq): Promise<void> {
-    await this.sellersRepository.remove(
-      await this.sellersRepository.findOneOrFail({
-        id: seller.id,
-      }),
-    );
+    await this.sellersRepository.remove(await this.sellersRepository.findOneOrFail(seller.id));
   }
 
   public async deleteSellers(sellers: DeleteUserBodyReq[]): Promise<void> {
     await this.sellersRepository.remove(
       await Promise.all(
         sellers.map(async (seller) => {
-          return await this.sellersRepository.findOneOrFail({
-            id: seller.id,
-          });
+          return await this.sellersRepository.findOneOrFail(seller.id);
         }),
       ),
     );

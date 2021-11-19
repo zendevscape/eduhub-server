@@ -89,7 +89,7 @@ export class FinancesService {
     });
 
     const transaction = await this.transactionsRepository.save({
-      user: user,
+      user: { id: user.id },
       type: TransactionType.Credit,
       amount: payment.amount,
       previousBalance: user.balance.amount,
@@ -99,8 +99,8 @@ export class FinancesService {
     });
 
     const result = await this.paymentsRepository.save({
-      user,
-      transaction,
+      user: { id: user.id },
+      transaction: { id: transaction.id },
       externalPaymentId: paymentApiResult.id,
       userName: paymentApiResult.userName,
       channelCategory: paymentApiResult.channelCategory,
@@ -178,7 +178,7 @@ export class FinancesService {
 
     if (sourceUser.balance.amount < transfer.amount) {
       const sourceTransaction = await this.transactionsRepository.save({
-        user: sourceUser,
+        user: { id: sourceUser.id },
         type: TransactionType.Debit,
         amount: transfer.amount,
         previousBalance: sourceUser.balance.amount,
@@ -188,26 +188,26 @@ export class FinancesService {
       });
 
       result = await this.transfersRepository.save({
-        sourceUser,
-        destinationUser,
-        sourceTransaction,
+        sourceUser: { id: sourceUser.id },
+        destinationUser: { id: destinationUser.id },
+        sourceTransaction: { id: sourceTransaction.id },
         amount: transfer.amount,
         status: TransferStatus.Failed,
       });
     } else {
       await this.balancesRepository.save([
         {
-          user: sourceUser,
+          user: { id: sourceUser.id },
           amount: sourceUser.balance.amount - transfer.amount,
         },
         {
-          user: destinationUser,
+          user: { id: destinationUser.id },
           amount: destinationUser.balance.amount + transfer.amount,
         },
       ]);
 
       const sourceTransaction = await this.transactionsRepository.save({
-        user: sourceUser,
+        user: { id: sourceUser.id },
         note: `Transfer to user ID ${destinationUser.id}`,
         type: TransactionType.Debit,
         amount: transfer.amount,
@@ -217,7 +217,7 @@ export class FinancesService {
       });
 
       const destinationTransaction = await this.transactionsRepository.save({
-        user: destinationUser,
+        user: { id: destinationUser.id },
         note: `Transfer from user ID ${sourceUser.id}`,
         type: TransactionType.Credit,
         amount: transfer.amount,
@@ -227,10 +227,10 @@ export class FinancesService {
       });
 
       result = await this.transfersRepository.save({
-        sourceUser,
-        destinationUser,
-        sourceTransaction,
-        destinationTransaction,
+        sourceUser: { id: sourceUser.id },
+        destinationUser: { id: destinationUser.id },
+        sourceTransaction: { id: sourceTransaction.id },
+        destinationTransaction: { id: destinationTransaction.id },
         amount: transfer.amount,
         status: TransferStatus.Success,
       });
@@ -251,30 +251,24 @@ export class FinancesService {
     let result: Transaction = new Transaction();
 
     if (id.guardianId) {
-      const guardian = await this.guardiansRepository.findOneOrFail({
-        id: id.guardianId,
-      });
+      const guardian = await this.guardiansRepository.findOneOrFail(id.guardianId);
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: guardian },
+        where: { user: { id: guardian.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail({
-        id: id.sellerId,
-      });
+      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: seller },
+        where: { user: { id: seller.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.studentId) {
-      const student = await this.studentsRepository.findOneOrFail({
-        id: id.studentId,
-      });
+      const student = await this.studentsRepository.findOneOrFail(id.studentId);
 
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: student },
+        where: { user: { id: student.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else {
@@ -303,30 +297,24 @@ export class FinancesService {
     let results: Array<Transaction> = [];
 
     if (id.guardianId) {
-      const guardian = await this.guardiansRepository.findOneOrFail({
-        id: id.guardianId,
-      });
+      const guardian = await this.guardiansRepository.findOneOrFail(id.guardianId);
 
       results = await this.transactionsRepository.find({
-        where: { user: guardian },
+        where: { user: { id: guardian.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail({
-        id: id.sellerId,
-      });
+      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
 
       results = await this.transactionsRepository.find({
-        where: { user: seller },
+        where: { user: { id: seller.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else if (id.studentId) {
-      const student = await this.studentsRepository.findOneOrFail({
-        id: id.studentId,
-      });
+      const student = await this.studentsRepository.findOneOrFail(id.studentId);
 
       results = await this.transactionsRepository.find({
-        where: { user: student },
+        where: { user: { id: student.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     }

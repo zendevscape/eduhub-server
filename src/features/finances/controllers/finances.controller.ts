@@ -16,7 +16,12 @@ import {
   ReceiveCallbacksHeadersReq,
 } from '../dtos';
 import { FinancesService } from '../services';
-import { createPaymentSchema, createTransferSchema, readTransactionSchema, readTransactionsSchema } from '../validations';
+import {
+  createPaymentSchema,
+  createTransferSchema,
+  readTransactionSchema,
+  readTransactionsSchema,
+} from '../validations';
 
 @Controller()
 export class FinancesController {
