@@ -45,7 +45,7 @@ export class StudentsService {
         id: result.id,
         name: result.name,
         email: result.email,
-        guardianId: result.guardian.id,
+        guardianId: result.guardianId,
         createdTime: result.createdTime,
         updatedTime: result.updatedTime,
       };
@@ -61,7 +61,7 @@ export class StudentsService {
       id: result.id,
       name: result.name,
       email: result.email,
-      guardianId: result.guardian.id,
+      guardianId: result.guardianId,
       createdTime: result.createdTime,
       updatedTime: result.updatedTime,
     };
@@ -77,7 +77,7 @@ export class StudentsService {
         id: result.id,
         name: result.name,
         email: result.email,
-        guardianId: result.guardian.id,
+        guardianId: result.guardianId,
         createdTime: result.createdTime,
         updatedTime: result.updatedTime,
       };
@@ -108,7 +108,7 @@ export class StudentsService {
       id: result.id,
       name: result.name,
       email: result.email,
-      guardianId: result.guardian.id,
+      guardianId: result.guardianId,
       createdTime: result.createdTime,
       updatedTime: result.updatedTime,
     };
@@ -140,7 +140,7 @@ export class StudentsService {
         id: result.id,
         name: result.name,
         email: result.email,
-        guardianId: result.guardian.id,
+        guardianId: result.guardianId,
         createdTime: result.createdTime,
         updatedTime: result.updatedTime,
       };

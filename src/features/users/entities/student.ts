@@ -1,4 +1,4 @@
-import { ChildEntity, JoinColumn, ManyToOne } from 'typeorm';
+import { ChildEntity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { Role, User } from './user';
 import type { Guardian } from './guardian';
 
@@ -9,4 +9,7 @@ export class Student extends User {
     name: 'guardian_id',
   })
   public guardian: Guardian;
+
+  @RelationId('guardian')
+  public guardianId: string;
 }

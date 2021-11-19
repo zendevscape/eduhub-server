@@ -49,7 +49,7 @@ export class ProductsService {
     return results.map((result) => {
       return {
         id: result.id,
-        sellerId: result.seller.id,
+        sellerId: result.sellerId,
         name: result.name,
         description: result.description,
         price: result.price,
@@ -68,7 +68,7 @@ export class ProductsService {
 
     return {
       id: result.id,
-      sellerId: result.seller.id,
+      sellerId: result.sellerId,
       name: result.name,
       description: result.description,
       price: result.price,
@@ -87,7 +87,7 @@ export class ProductsService {
     return results.map((result) => {
       return {
         id: result.id,
-        sellerId: result.seller.id,
+        sellerId: result.sellerId,
         name: result.name,
         description: result.description,
         price: result.price,
@@ -116,7 +116,7 @@ export class ProductsService {
 
     return {
       id: result.id,
-      sellerId: result.seller.id,
+      sellerId: result.sellerId,
       name: result.name,
       description: result.description,
       price: result.price,
@@ -149,7 +149,7 @@ export class ProductsService {
     return results.map((result) => {
       return {
         id: result.id,
-        sellerId: result.seller.id,
+        sellerId: result.sellerId,
         name: result.name,
         description: result.description,
         price: result.price,

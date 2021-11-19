@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import type { OrderItem } from '../../orders/entities';
 import type { Seller } from '../../users/entities';
 
@@ -12,6 +20,9 @@ export class Product {
     name: 'seller_id',
   })
   public seller: Seller;
+
+  @RelationId('seller')
+  public sellerId: string;
 
   @Column()
   public name: string;
