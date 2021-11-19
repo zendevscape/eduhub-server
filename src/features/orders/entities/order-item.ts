@@ -10,6 +10,7 @@ export class OrderItem {
   @ManyToOne('Order', 'orderItems', {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
   @JoinColumn({
     name: 'order_id',
