@@ -3,23 +3,24 @@ import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
 import { StudentsService } from '../services';
 import {
-  CreateStudentBodyReq,
+  CreateStudentsBodyReq,
   CreateStudentsRes,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
+  DeleteStudentParamsReq,
+  DeleteStudentsBodyReq,
+  ReadStudentParamsReq,
   ReadStudentRes,
   ReadStudentsRes,
-  ReadUserParamsReq,
   UpdateStudentBodyReq,
+  UpdateStudentParamsReq,
   UpdateStudentRes,
+  UpdateStudentsBodyReq,
   UpdateStudentsRes,
-  UpdateUserParamsReq,
 } from '../dtos';
 import {
   createStudentsSchema,
-  deleteUserSchema,
-  deleteUsersSchema,
-  readUserSchema,
+  deleteStudentSchema,
+  deleteStudentsSchema,
+  readStudentSchema,
   updateStudentSchema,
   updateStudentsSchema,
 } from '../validations';
@@ -31,7 +32,7 @@ export class StudentsController {
   @Post()
   public async createStudents(
     @Body(new ValidationPipe(createStudentsSchema.body))
-    body: CreateStudentBodyReq[],
+    body: CreateStudentsBodyReq,
   ): Promise<Response<CreateStudentsRes>> {
     const results = await this.studentsService.createStudents(body);
 
@@ -57,10 +58,10 @@ export class StudentsController {
     };
   }
 
-  @Get(':id')
+  @Get(':studentId')
   public async readStudent(
-    @Param(new ValidationPipe(readUserSchema.params))
-    params: ReadUserParamsReq,
+    @Param(new ValidationPipe(readStudentSchema.params))
+    params: ReadStudentParamsReq,
   ): Promise<Response<ReadStudentRes>> {
     const results = await this.studentsService.readStudent(params);
 
@@ -76,7 +77,7 @@ export class StudentsController {
   @Patch()
   public async updateStudents(
     @Body(new ValidationPipe(updateStudentsSchema.body))
-    body: UpdateStudentBodyReq[],
+    body: UpdateStudentsBodyReq,
   ): Promise<Response<UpdateStudentsRes>> {
     const results = await this.studentsService.updateStudents(body);
 
@@ -89,12 +90,12 @@ export class StudentsController {
     };
   }
 
-  @Patch(':id')
+  @Patch(':studentId')
   public async updateStudent(
     @Body(new ValidationPipe(updateStudentSchema.body))
     body: UpdateStudentBodyReq,
     @Param(new ValidationPipe(updateStudentSchema.params))
-    params: UpdateUserParamsReq,
+    params: UpdateStudentParamsReq,
   ): Promise<Response<UpdateStudentRes>> {
     const result = await this.studentsService.updateStudent(params, body);
 
@@ -109,8 +110,8 @@ export class StudentsController {
 
   @Delete()
   public async deleteStudents(
-    @Body(new ValidationPipe(deleteUsersSchema.body))
-    body: DeleteUserBodyReq[],
+    @Body(new ValidationPipe(deleteStudentsSchema.body))
+    body: DeleteStudentsBodyReq,
   ): Promise<Response<void>> {
     await this.studentsService.deleteStudents(body);
 
@@ -120,10 +121,10 @@ export class StudentsController {
     };
   }
 
-  @Delete(':id')
+  @Delete(':studentId')
   public async deleteStudent(
-    @Param(new ValidationPipe(deleteUserSchema.params))
-    params: DeleteUserParamsReq,
+    @Param(new ValidationPipe(deleteStudentSchema.params))
+    params: DeleteStudentParamsReq,
   ): Promise<Response<void>> {
     await this.studentsService.deleteStudent(params);
 

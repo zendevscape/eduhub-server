@@ -5,12 +5,14 @@ import { PasswordService } from '../../../core/services';
 import { Admin } from '../entities';
 import {
   AdminRes,
-  CreateAdminBodyReq,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
-  ReadUserParamsReq,
+  AdminsRes,
+  CreateAdminsBodyReq,
+  DeleteAdminParamsReq,
+  DeleteAdminsBodyReq,
+  ReadAdminParamsReq,
   UpdateAdminBodyReq,
-  UpdateUserParamsReq,
+  UpdateAdminParamsReq,
+  UpdateAdminsBodyReq,
 } from '../dtos';
 
 @Injectable()
@@ -22,7 +24,7 @@ export class AdminsService {
     private readonly adminsRepository: Repository<Admin>,
   ) {}
 
-  public async createAdmins(admins: CreateAdminBodyReq[]): Promise<AdminRes[]> {
+  public async createAdmins(admins: CreateAdminsBodyReq): Promise<AdminsRes> {
     const results = await this.adminsRepository.save(
       await Promise.all(
         admins.map(async (admin) => {
@@ -45,8 +47,8 @@ export class AdminsService {
     });
   }
 
-  public async readAdmin(admin: ReadUserParamsReq): Promise<AdminRes> {
-    const result = await this.adminsRepository.findOneOrFail(admin.id);
+  public async readAdmin(id: ReadAdminParamsReq): Promise<AdminRes> {
+    const result = await this.adminsRepository.findOneOrFail(id.adminId);
 
     return {
       id: result.id,
@@ -57,7 +59,7 @@ export class AdminsService {
     };
   }
 
-  public async readAdmins(): Promise<AdminRes[]> {
+  public async readAdmins(): Promise<AdminsRes> {
     const results = await this.adminsRepository.find();
 
     return results.map((result) => {
@@ -71,16 +73,13 @@ export class AdminsService {
     });
   }
 
-  public async updateAdmin(
-    admin: UpdateUserParamsReq,
-    newAdmin: UpdateAdminBodyReq,
-  ): Promise<AdminRes> {
-    const oldAdmin = await this.adminsRepository.findOneOrFail(admin.id);
+  public async updateAdmin(id: UpdateAdminParamsReq, admin: UpdateAdminBodyReq): Promise<AdminRes> {
+    const oldAdmin = await this.adminsRepository.findOneOrFail(id.adminId);
 
     const result = await this.adminsRepository.save(
       this.adminsRepository.create({
         ...oldAdmin,
-        ...newAdmin,
+        ...admin,
       }),
     );
 
@@ -93,7 +92,7 @@ export class AdminsService {
     };
   }
 
-  public async updateAdmins(admins: UpdateAdminBodyReq[]): Promise<AdminRes[]> {
+  public async updateAdmins(admins: UpdateAdminsBodyReq): Promise<AdminsRes> {
     const results = await this.adminsRepository.save(
       await Promise.all(
         admins.map(async (admin) => {
@@ -118,11 +117,11 @@ export class AdminsService {
     });
   }
 
-  public async deleteAdmin(admin: DeleteUserParamsReq): Promise<void> {
-    await this.adminsRepository.remove(await this.adminsRepository.findOneOrFail(admin.id));
+  public async deleteAdmin(id: DeleteAdminParamsReq): Promise<void> {
+    await this.adminsRepository.remove(await this.adminsRepository.findOneOrFail(id.adminId));
   }
 
-  public async deleteAdmins(admins: DeleteUserBodyReq[]): Promise<void> {
+  public async deleteAdmins(admins: DeleteAdminsBodyReq): Promise<void> {
     await this.adminsRepository.remove(
       await Promise.all(
         admins.map(async (admin) => {

@@ -3,23 +3,24 @@ import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
 import { AdminsService } from '../services';
 import {
-  CreateAdminBodyReq,
+  CreateAdminsBodyReq,
   CreateAdminsRes,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
+  DeleteAdminParamsReq,
+  DeleteAdminsBodyReq,
+  ReadAdminParamsReq,
   ReadAdminRes,
   ReadAdminsRes,
-  ReadUserParamsReq,
   UpdateAdminBodyReq,
+  UpdateAdminParamsReq,
   UpdateAdminRes,
+  UpdateAdminsBodyReq,
   UpdateAdminsRes,
-  UpdateUserParamsReq,
 } from '../dtos';
 import {
   createAdminsSchema,
-  deleteUserSchema,
-  deleteUsersSchema,
-  readUserSchema,
+  deleteAdminSchema,
+  deleteAdminsSchema,
+  readAdminSchema,
   updateAdminSchema,
   updateAdminsSchema,
 } from '../validations';
@@ -31,7 +32,7 @@ export class AdminsController {
   @Post()
   public async createAdmins(
     @Body(new ValidationPipe(createAdminsSchema.body))
-    body: CreateAdminBodyReq[],
+    body: CreateAdminsBodyReq,
   ): Promise<Response<CreateAdminsRes>> {
     const results = await this.adminsService.createAdmins(body);
 
@@ -58,10 +59,10 @@ export class AdminsController {
     };
   }
 
-  @Get(':id')
+  @Get(':adminId')
   public async readAdmin(
-    @Param(new ValidationPipe(readUserSchema.params))
-    params: ReadUserParamsReq,
+    @Param(new ValidationPipe(readAdminSchema.params))
+    params: ReadAdminParamsReq,
   ): Promise<Response<ReadAdminRes>> {
     const result = await this.adminsService.readAdmin(params);
 
@@ -77,7 +78,7 @@ export class AdminsController {
   @Patch()
   public async updateAdmins(
     @Body(new ValidationPipe(updateAdminsSchema.body))
-    body: UpdateAdminBodyReq[],
+    body: UpdateAdminsBodyReq,
   ): Promise<Response<UpdateAdminsRes>> {
     const results = await this.adminsService.updateAdmins(body);
 
@@ -90,12 +91,12 @@ export class AdminsController {
     };
   }
 
-  @Patch(':id')
+  @Patch(':adminId')
   public async updateAdmin(
     @Body(new ValidationPipe(updateAdminSchema.body))
     body: UpdateAdminBodyReq,
     @Param(new ValidationPipe(updateAdminSchema.params))
-    params: UpdateUserParamsReq,
+    params: UpdateAdminParamsReq,
   ): Promise<Response<UpdateAdminRes>> {
     const result = await this.adminsService.updateAdmin(params, body);
 
@@ -110,8 +111,8 @@ export class AdminsController {
 
   @Delete()
   public async deleteAdmins(
-    @Body(new ValidationPipe(deleteUsersSchema.body))
-    body: DeleteUserBodyReq[],
+    @Body(new ValidationPipe(deleteAdminsSchema.body))
+    body: DeleteAdminsBodyReq,
   ): Promise<Response<void>> {
     await this.adminsService.deleteAdmins(body);
 
@@ -121,10 +122,10 @@ export class AdminsController {
     };
   }
 
-  @Delete(':id')
+  @Delete(':adminId')
   public async deleteAdmin(
-    @Param(new ValidationPipe(deleteUserSchema.params))
-    params: DeleteUserParamsReq,
+    @Param(new ValidationPipe(deleteAdminSchema.params))
+    params: DeleteAdminParamsReq,
   ): Promise<Response<void>> {
     await this.adminsService.deleteAdmin(params);
 

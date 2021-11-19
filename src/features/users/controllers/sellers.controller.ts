@@ -3,23 +3,24 @@ import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
 import { SellersService } from '../services';
 import {
-  CreateSellerBodyReq,
+  CreateSellersBodyReq,
   CreateSellersRes,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
+  DeleteSellerParamsReq,
+  DeleteSellersBodyReq,
+  ReadSellerParamsReq,
   ReadSellerRes,
   ReadSellersRes,
-  ReadUserParamsReq,
   UpdateSellerBodyReq,
+  UpdateSellerParamsReq,
   UpdateSellerRes,
+  UpdateSellersBodyReq,
   UpdateSellersRes,
-  UpdateUserParamsReq,
 } from '../dtos';
 import {
   createSellersSchema,
-  deleteUserSchema,
-  deleteUsersSchema,
-  readUserSchema,
+  deleteSellerSchema,
+  deleteSellersSchema,
+  readSellerSchema,
   updateSellerSchema,
   updateSellersSchema,
 } from '../validations';
@@ -31,7 +32,7 @@ export class SellersController {
   @Post()
   public async createSellers(
     @Body(new ValidationPipe(createSellersSchema.body))
-    body: CreateSellerBodyReq[],
+    body: CreateSellersBodyReq,
   ): Promise<Response<CreateSellersRes>> {
     const results = await this.sellersService.createSellers(body);
 
@@ -57,10 +58,10 @@ export class SellersController {
     };
   }
 
-  @Get(':id')
+  @Get(':sellerId')
   public async readSeller(
-    @Param(new ValidationPipe(readUserSchema.params))
-    params: ReadUserParamsReq,
+    @Param(new ValidationPipe(readSellerSchema.params))
+    params: ReadSellerParamsReq,
   ): Promise<Response<ReadSellerRes>> {
     const result = await this.sellersService.readSeller(params);
 
@@ -76,7 +77,7 @@ export class SellersController {
   @Patch()
   public async updateSellers(
     @Body(new ValidationPipe(updateSellersSchema.body))
-    body: UpdateSellerBodyReq[],
+    body: UpdateSellersBodyReq,
   ): Promise<Response<UpdateSellersRes>> {
     const results = await this.sellersService.updateSellers(body);
 
@@ -89,12 +90,12 @@ export class SellersController {
     };
   }
 
-  @Patch(':id')
+  @Patch(':sellerId')
   public async updateSeller(
     @Body(new ValidationPipe(updateSellerSchema.body))
     body: UpdateSellerBodyReq,
     @Param(new ValidationPipe(updateSellerSchema.params))
-    params: UpdateUserParamsReq,
+    params: UpdateSellerParamsReq,
   ): Promise<Response<UpdateSellerRes>> {
     const result = await this.sellersService.updateSeller(params, body);
 
@@ -109,8 +110,8 @@ export class SellersController {
 
   @Delete()
   public async deleteSellers(
-    @Body(new ValidationPipe(deleteUsersSchema.body))
-    body: DeleteUserBodyReq[],
+    @Body(new ValidationPipe(deleteSellersSchema.body))
+    body: DeleteSellersBodyReq,
   ): Promise<Response<void>> {
     await this.sellersService.deleteSellers(body);
 
@@ -120,10 +121,10 @@ export class SellersController {
     };
   }
 
-  @Delete(':id')
+  @Delete(':sellerId')
   public async deleteSeller(
-    @Param(new ValidationPipe(deleteUserSchema.params))
-    params: DeleteUserParamsReq,
+    @Param(new ValidationPipe(deleteSellerSchema.params))
+    params: DeleteSellerParamsReq,
   ): Promise<Response<void>> {
     await this.sellersService.deleteSeller(params);
 

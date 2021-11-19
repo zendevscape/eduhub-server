@@ -1,13 +1,52 @@
-import { CreateUserBodyReq, UpdateUserBodyReq, UserRes } from './users.dto';
+interface CreateGuardianBody {
+  name: string;
+  email: string;
+  password: string;
+}
 
-export interface CreateGuardianBodyReq extends CreateUserBodyReq {}
+export interface CreateGuardiansBodyReq extends Array<CreateGuardianBody> {}
 
-export interface UpdateGuardianBodyReq extends UpdateUserBodyReq {}
+export interface ReadGuardianParamsReq {
+  guardianId: string;
+}
 
-export interface GuardianRes extends UserRes {}
+export interface UpdateGuardianBodyReq {
+  name?: string;
+  email?: string;
+}
+
+export interface UpdateGuardianParamsReq extends ReadGuardianParamsReq {}
+
+interface UpdateGuardiansBody {
+  id: string;
+  name?: string;
+  email?: string;
+}
+
+export interface UpdateGuardiansBodyReq extends Array<UpdateGuardiansBody> {}
+
+export interface DeleteGuardianParamsReq extends ReadGuardianParamsReq {}
+
+interface DeleteGuardiansBody {
+  id: string;
+}
+
+export interface DeleteGuardiansBodyReq extends Array<DeleteGuardiansBody> {}
+
+interface Guardian {
+  id: string;
+  name: string;
+  email: string;
+  createdTime: Date;
+  updatedTime: Date;
+}
+
+export interface GuardianRes extends Guardian {}
+
+export interface GuardiansRes extends Array<Guardian> {}
 
 export interface CreateGuardiansRes {
-  guardians: GuardianRes[];
+  guardians: GuardiansRes;
 }
 
 export interface ReadGuardianRes {

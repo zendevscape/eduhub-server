@@ -3,23 +3,24 @@ import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
 import { GuardiansService } from '../services';
 import {
-  CreateGuardianBodyReq,
+  CreateGuardiansBodyReq,
   CreateGuardiansRes,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
+  DeleteGuardianParamsReq,
+  DeleteGuardiansBodyReq,
+  ReadGuardianParamsReq,
   ReadGuardianRes,
   ReadGuardiansRes,
-  ReadUserParamsReq,
   UpdateGuardianBodyReq,
+  UpdateGuardianParamsReq,
   UpdateGuardianRes,
+  UpdateGuardiansBodyReq,
   UpdateGuardiansRes,
-  UpdateUserParamsReq,
 } from '../dtos';
 import {
   createGuardiansSchema,
-  deleteUserSchema,
-  deleteUsersSchema,
-  readUserSchema,
+  deleteGuardianSchema,
+  deleteGuardiansSchema,
+  readGuardianSchema,
   updateGuardianSchema,
   updateGuardiansSchema,
 } from '../validations';
@@ -31,7 +32,7 @@ export class GuardiansController {
   @Post()
   public async createGuardians(
     @Body(new ValidationPipe(createGuardiansSchema.body))
-    body: CreateGuardianBodyReq[],
+    body: CreateGuardiansBodyReq,
   ): Promise<Response<CreateGuardiansRes>> {
     const results = await this.guardiansService.createGuardians(body);
 
@@ -57,10 +58,10 @@ export class GuardiansController {
     };
   }
 
-  @Get(':id')
+  @Get(':guardianId')
   public async readGuardian(
-    @Param(new ValidationPipe(readUserSchema.params))
-    params: ReadUserParamsReq,
+    @Param(new ValidationPipe(readGuardianSchema.params))
+    params: ReadGuardianParamsReq,
   ): Promise<Response<ReadGuardianRes>> {
     const result = await this.guardiansService.readGuardian(params);
 
@@ -76,7 +77,7 @@ export class GuardiansController {
   @Patch()
   public async updateGuardians(
     @Body(new ValidationPipe(updateGuardiansSchema.body))
-    body: UpdateGuardianBodyReq[],
+    body: UpdateGuardiansBodyReq,
   ): Promise<Response<UpdateGuardiansRes>> {
     const results = await this.guardiansService.updateGuardians(body);
 
@@ -89,12 +90,12 @@ export class GuardiansController {
     };
   }
 
-  @Patch(':id')
+  @Patch(':guardianId')
   public async updateGuardian(
     @Body(new ValidationPipe(updateGuardianSchema.body))
     body: UpdateGuardianBodyReq,
     @Param(new ValidationPipe(updateGuardianSchema.params))
-    params: UpdateUserParamsReq,
+    params: UpdateGuardianParamsReq,
   ): Promise<Response<UpdateGuardianRes>> {
     const result = await this.guardiansService.updateGuardian(params, body);
 
@@ -109,8 +110,8 @@ export class GuardiansController {
 
   @Delete()
   public async deleteGuardians(
-    @Body(new ValidationPipe(deleteUsersSchema.body))
-    body: DeleteUserBodyReq[],
+    @Body(new ValidationPipe(deleteGuardiansSchema.body))
+    body: DeleteGuardiansBodyReq,
   ): Promise<Response<void>> {
     await this.guardiansService.deleteGuardians(body);
 
@@ -120,10 +121,10 @@ export class GuardiansController {
     };
   }
 
-  @Delete(':id')
+  @Delete(':guardianId')
   public async deleteGuardian(
-    @Param(new ValidationPipe(deleteUserSchema.params))
-    params: DeleteUserParamsReq,
+    @Param(new ValidationPipe(deleteGuardianSchema.params))
+    params: DeleteGuardianParamsReq,
   ): Promise<Response<void>> {
     await this.guardiansService.deleteGuardian(params);
 

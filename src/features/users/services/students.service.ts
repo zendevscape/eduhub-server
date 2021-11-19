@@ -4,13 +4,15 @@ import { Repository } from 'typeorm';
 import { PasswordService } from '../../../core/services';
 import { Guardian, Student } from '../entities';
 import {
-  CreateStudentBodyReq,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
-  ReadUserParamsReq,
+  CreateStudentsBodyReq,
+  DeleteStudentParamsReq,
+  DeleteStudentsBodyReq,
+  ReadStudentParamsReq,
   StudentRes,
+  StudentsRes,
   UpdateStudentBodyReq,
-  UpdateUserParamsReq,
+  UpdateStudentParamsReq,
+  UpdateStudentsBodyReq,
 } from '../dtos';
 
 @Injectable()
@@ -25,7 +27,7 @@ export class StudentsService {
     private readonly studentsRepository: Repository<Student>,
   ) {}
 
-  public async createStudents(students: CreateStudentBodyReq[]): Promise<StudentRes[]> {
+  public async createStudents(students: CreateStudentsBodyReq): Promise<StudentsRes> {
     const results = await this.studentsRepository.save(
       await Promise.all(
         students.map(async (student) => {
@@ -52,8 +54,8 @@ export class StudentsService {
     });
   }
 
-  public async readStudent(student: ReadUserParamsReq): Promise<StudentRes> {
-    const result = await this.studentsRepository.findOneOrFail(student.id, {
+  public async readStudent(id: ReadStudentParamsReq): Promise<StudentRes> {
+    const result = await this.studentsRepository.findOneOrFail(id.studentId, {
       relations: ['guardian'],
     });
 
@@ -67,7 +69,7 @@ export class StudentsService {
     };
   }
 
-  public async readStudents(): Promise<StudentRes[]> {
+  public async readStudents(): Promise<StudentsRes> {
     const results = await this.studentsRepository.find({
       relations: ['guardian'],
     });
@@ -85,21 +87,21 @@ export class StudentsService {
   }
 
   public async updateStudent(
-    student: UpdateUserParamsReq,
-    newStudent: UpdateStudentBodyReq,
+    id: UpdateStudentParamsReq,
+    student: UpdateStudentBodyReq,
   ): Promise<StudentRes> {
-    const oldStudent = await this.studentsRepository.findOneOrFail(student.id, {
+    const oldStudent = await this.studentsRepository.findOneOrFail(id.studentId, {
       relations: ['guardian'],
     });
 
-    const guardian = newStudent.guardianId
-      ? await this.guardiansRepository.findOneOrFail(newStudent.guardianId)
+    const guardian = student.guardianId
+      ? await this.guardiansRepository.findOneOrFail(student.guardianId)
       : oldStudent.guardian;
 
     const result = await this.studentsRepository.save(
       this.studentsRepository.create({
         ...oldStudent,
-        ...newStudent,
+        ...student,
         guardian: { id: guardian.id },
       }),
     );
@@ -114,7 +116,7 @@ export class StudentsService {
     };
   }
 
-  public async updateStudents(students: UpdateStudentBodyReq[]): Promise<StudentRes[]> {
+  public async updateStudents(students: UpdateStudentsBodyReq): Promise<StudentsRes> {
     const results = await this.studentsRepository.save(
       await Promise.all(
         students.map(async (student) => {
@@ -147,11 +149,11 @@ export class StudentsService {
     });
   }
 
-  public async deleteStudent(student: DeleteUserParamsReq): Promise<void> {
-    await this.studentsRepository.remove(await this.studentsRepository.findOneOrFail(student.id));
+  public async deleteStudent(id: DeleteStudentParamsReq): Promise<void> {
+    await this.studentsRepository.remove(await this.studentsRepository.findOneOrFail(id.studentId));
   }
 
-  public async deleteStudents(students: DeleteUserBodyReq[]): Promise<void> {
+  public async deleteStudents(students: DeleteStudentsBodyReq): Promise<void> {
     await this.studentsRepository.remove(
       await Promise.all(
         students.map(async (student) => {

@@ -4,13 +4,15 @@ import { Repository } from 'typeorm';
 import { PasswordService } from '../../../core/services';
 import { Guardian } from '../entities';
 import {
-  CreateGuardianBodyReq,
-  DeleteUserBodyReq,
-  DeleteUserParamsReq,
+  CreateGuardiansBodyReq,
+  DeleteGuardianParamsReq,
+  DeleteGuardiansBodyReq,
   GuardianRes,
-  ReadUserParamsReq,
+  GuardiansRes,
+  ReadGuardianParamsReq,
   UpdateGuardianBodyReq,
-  UpdateUserParamsReq,
+  UpdateGuardianParamsReq,
+  UpdateGuardiansBodyReq,
 } from '../dtos';
 
 @Injectable()
@@ -22,7 +24,7 @@ export class GuardiansService {
     private readonly guardiansRepository: Repository<Guardian>,
   ) {}
 
-  public async createGuardians(guardians: CreateGuardianBodyReq[]): Promise<GuardianRes[]> {
+  public async createGuardians(guardians: CreateGuardiansBodyReq): Promise<GuardiansRes> {
     const results = await this.guardiansRepository.save(
       await Promise.all(
         guardians.map(async (guardian) => {
@@ -45,8 +47,8 @@ export class GuardiansService {
     });
   }
 
-  public async readGuardian(guardian: ReadUserParamsReq): Promise<GuardianRes> {
-    const result = await this.guardiansRepository.findOneOrFail(guardian.id);
+  public async readGuardian(id: ReadGuardianParamsReq): Promise<GuardianRes> {
+    const result = await this.guardiansRepository.findOneOrFail(id.guardianId);
 
     return {
       id: result.id,
@@ -72,15 +74,15 @@ export class GuardiansService {
   }
 
   public async updateGuardian(
-    guardian: UpdateUserParamsReq,
-    newGuardian: UpdateGuardianBodyReq,
+    id: UpdateGuardianParamsReq,
+    guardian: UpdateGuardianBodyReq,
   ): Promise<GuardianRes> {
-    const oldGuardian = await this.guardiansRepository.findOneOrFail(guardian.id);
+    const oldGuardian = await this.guardiansRepository.findOneOrFail(id.guardianId);
 
     const result = await this.guardiansRepository.save(
       this.guardiansRepository.create({
         ...oldGuardian,
-        ...newGuardian,
+        ...guardian,
       }),
     );
 
@@ -93,7 +95,7 @@ export class GuardiansService {
     };
   }
 
-  public async updateGuardians(guardians: UpdateGuardianBodyReq[]): Promise<GuardianRes[]> {
+  public async updateGuardians(guardians: UpdateGuardiansBodyReq): Promise<GuardiansRes> {
     const results = await this.guardiansRepository.save(
       await Promise.all(
         guardians.map(async (guardian) => {
@@ -118,13 +120,13 @@ export class GuardiansService {
     });
   }
 
-  public async deleteGuardian(guardian: DeleteUserParamsReq): Promise<void> {
+  public async deleteGuardian(id: DeleteGuardianParamsReq): Promise<void> {
     await this.guardiansRepository.remove(
-      await this.guardiansRepository.findOneOrFail(guardian.id),
+      await this.guardiansRepository.findOneOrFail(id.guardianId),
     );
   }
 
-  public async deleteGuardians(guardians: DeleteUserBodyReq[]): Promise<void> {
+  public async deleteGuardians(guardians: DeleteGuardiansBodyReq): Promise<void> {
     await this.guardiansRepository.remove(
       await Promise.all(
         guardians.map(async (guardian) => {
