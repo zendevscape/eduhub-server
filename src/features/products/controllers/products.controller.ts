@@ -30,7 +30,7 @@ import {
   updateProductsSchema,
 } from '../validations';
 
-@Controller('products')
+@Controller('sellers/:sellerId/products')
 export class ProductsController {
   public constructor(private readonly productsService: ProductsService) {}
 
