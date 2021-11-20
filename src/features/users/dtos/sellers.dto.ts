@@ -37,8 +37,8 @@ interface Seller {
   id: string;
   name: string;
   email: string;
-  createdTime: Date;
-  updatedTime: Date;
+  created: Date;
+  updated: Date;
 }
 
 export interface SellerRes extends Seller {}

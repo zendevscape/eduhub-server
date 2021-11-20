@@ -41,8 +41,8 @@ interface Student {
   name: string;
   email: string;
   guardianId: string;
-  createdTime: Date;
-  updatedTime: Date;
+  created: Date;
+  updated: Date;
 }
 
 export interface StudentRes extends Student {}

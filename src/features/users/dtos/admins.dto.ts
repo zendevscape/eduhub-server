@@ -37,8 +37,8 @@ interface Admin {
   id: string;
   name: string;
   email: string;
-  createdTime: Date;
-  updatedTime: Date;
+  created: Date;
+  updated: Date;
 }
 
 export interface AdminRes extends Admin {}

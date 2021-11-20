@@ -41,8 +41,8 @@ export class SellersService {
         id: result.id,
         name: result.name,
         email: result.email,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }
@@ -54,8 +54,8 @@ export class SellersService {
       id: result.id,
       name: result.name,
       email: result.email,
-      createdTime: result.createdTime,
-      updatedTime: result.updatedTime,
+      created: result.created,
+      updated: result.updated,
     };
   }
 
@@ -67,8 +67,8 @@ export class SellersService {
         id: result.id,
         name: result.name,
         email: result.email,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }
@@ -90,8 +90,8 @@ export class SellersService {
       id: result.id,
       name: result.name,
       email: result.email,
-      createdTime: result.createdTime,
-      updatedTime: result.updatedTime,
+      created: result.created,
+      updated: result.updated,
     };
   }
 
@@ -114,8 +114,8 @@ export class SellersService {
         id: result.id,
         name: result.name,
         email: result.email,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }

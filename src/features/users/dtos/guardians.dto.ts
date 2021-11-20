@@ -37,8 +37,8 @@ interface Guardian {
   id: string;
   name: string;
   email: string;
-  createdTime: Date;
-  updatedTime: Date;
+  created: Date;
+  updated: Date;
 }
 
 export interface GuardianRes extends Guardian {}

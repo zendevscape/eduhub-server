@@ -60,15 +60,11 @@ export class User {
   })
   public balance: Balance;
 
-  @CreateDateColumn({
-    name: 'created_time',
-  })
-  public createdTime: Date;
+  @CreateDateColumn()
+  public created: Date;
 
-  @UpdateDateColumn({
-    name: 'updated_time',
-  })
-  public updatedTime: Date;
+  @UpdateDateColumn()
+  public updated: Date;
 
   @AfterLoad()
   public readDefaultBalance(): void {

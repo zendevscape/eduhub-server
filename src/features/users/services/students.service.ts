@@ -48,8 +48,8 @@ export class StudentsService {
         name: result.name,
         email: result.email,
         guardianId: result.guardianId,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }
@@ -64,8 +64,8 @@ export class StudentsService {
       name: result.name,
       email: result.email,
       guardianId: result.guardianId,
-      createdTime: result.createdTime,
-      updatedTime: result.updatedTime,
+      created: result.created,
+      updated: result.updated,
     };
   }
 
@@ -80,8 +80,8 @@ export class StudentsService {
         name: result.name,
         email: result.email,
         guardianId: result.guardianId,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }
@@ -111,8 +111,8 @@ export class StudentsService {
       name: result.name,
       email: result.email,
       guardianId: result.guardianId,
-      createdTime: result.createdTime,
-      updatedTime: result.updatedTime,
+      created: result.created,
+      updated: result.updated,
     };
   }
 
@@ -143,8 +143,8 @@ export class StudentsService {
         name: result.name,
         email: result.email,
         guardianId: result.guardianId,
-        createdTime: result.createdTime,
-        updatedTime: result.updatedTime,
+        created: result.created,
+        updated: result.updated,
       };
     });
   }
