@@ -1,8 +1,8 @@
 {
   "name": "schoolhub-back-end",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "app.ts",
+  "main": "main.ts",
   "author": "Muhammad Naufal K. I. A <mfalkia341@gmail.com>",
   "license": "GPL-3.0-or-later",
   "private": true,
