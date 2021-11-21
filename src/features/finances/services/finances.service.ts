@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Guardian, Seller, Student, User } from '../../users/entities';
+import { Admin, Guardian, Seller, Student, User } from '../../users/entities';
 import { PaymentGatewaysService } from '../../payment-gateways/services';
 import {
   Balance,
@@ -14,23 +14,34 @@ import {
   TransferStatus,
 } from '../entities';
 import {
+  BalanceRes,
   CreatePaymentBodyReq,
   CreatePaymentParamsReq,
   CreateTransferBodyReq,
   CreateTransferParamsReq,
   PaymentRes,
+  PaymentsRes,
+  ReadBalanceParamsReq,
+  ReadPaymentParamsReq,
+  ReadPaymentsParamsReq,
   ReadTransactionParamsReq,
   ReadTransactionsParamsReq,
+  ReadTransferParamsReq,
+  ReadTransfersParamsReq,
   ReceiveCallbacksBodyReq,
   ReceiveCallbacksHeadersReq,
   TransactionRes,
   TransactionsRes,
   TransferRes,
+  TransfersRes,
 } from '../dtos';
 
 @Injectable()
 export class FinancesService {
   public constructor(
+    @InjectRepository(Admin)
+    private readonly adminsRepository: Repository<Admin>,
+
     @InjectRepository(Guardian)
     private readonly guardiansRepository: Repository<Guardian>,
 
@@ -61,7 +72,11 @@ export class FinancesService {
   ): Promise<PaymentRes> {
     let user: User;
 
-    if (id.guardianId) {
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId, {
+        relations: ['balance'],
+      });
+    } else if (id.guardianId) {
       user = await this.guardiansRepository.findOneOrFail(id.guardianId, {
         relations: ['balance'],
       });
@@ -134,7 +149,11 @@ export class FinancesService {
     let destinationUser: User;
     let result: Transfer;
 
-    if (id.guardianId) {
+    if (id.adminId) {
+      sourceUser = await this.adminsRepository.findOneOrFail(id.adminId, {
+        relations: ['balance'],
+      });
+    } else if (id.guardianId) {
       sourceUser = await this.guardiansRepository.findOneOrFail(id.guardianId, {
         relations: ['balance'],
       });
@@ -153,6 +172,9 @@ export class FinancesService {
       });
     }
 
+    const destinationAdmin = await this.adminsRepository.findOne(transfer.destinationUserId, {
+      relations: ['balance'],
+    });
     const destinationGuardian = await this.guardiansRepository.findOne(transfer.destinationUserId, {
       relations: ['balance'],
     });
@@ -163,7 +185,9 @@ export class FinancesService {
       relations: ['balance'],
     });
 
-    if (destinationGuardian) {
+    if (destinationAdmin) {
+      destinationUser = destinationAdmin;
+    } else if (destinationGuardian) {
       destinationUser = destinationGuardian;
     } else if (destinationSeller) {
       destinationUser = destinationSeller;
@@ -247,28 +271,54 @@ export class FinancesService {
     };
   }
 
-  public async readTransaction(id: ReadTransactionParamsReq): Promise<TransactionRes> {
-    let result: Transaction = new Transaction();
+  public async readBalance(id: ReadBalanceParamsReq): Promise<BalanceRes> {
+    let user: User;
 
-    if (id.guardianId) {
-      const guardian = await this.guardiansRepository.findOneOrFail(id.guardianId);
-
-      result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: { id: guardian.id } },
-        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId, {
+        relations: ['balance'],
+      });
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId, {
+        relations: ['balance'],
       });
     } else if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
-
-      result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: { id: seller.id } },
-        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
+      user = await this.sellersRepository.findOneOrFail(id.sellerId, {
+        relations: ['balance'],
       });
     } else if (id.studentId) {
-      const student = await this.studentsRepository.findOneOrFail(id.studentId);
+      user = await this.studentsRepository.findOneOrFail(id.studentId, {
+        relations: ['balance'],
+      });
+    } else {
+      throw new BadRequestException({
+        success: false,
+        message: 'Unknown user type',
+      });
+    }
 
+    return {
+      amount: user.balance.amount,
+    };
+  }
+
+  public async readTransaction(id: ReadTransactionParamsReq): Promise<TransactionRes> {
+    let result: Transaction;
+    let user: User | undefined;
+
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
+    } else if (id.sellerId) {
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
+    } else if (id.studentId) {
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    }
+
+    if (user) {
       result = await this.transactionsRepository.findOneOrFail(id.transactionId, {
-        where: { user: { id: student.id } },
+        where: { user: { id: user.id } },
         relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
       });
     } else {
@@ -294,30 +344,27 @@ export class FinancesService {
   }
 
   public async readTransactions(id: ReadTransactionsParamsReq): Promise<TransactionsRes> {
-    let results: Array<Transaction> = [];
+    let user: User;
 
-    if (id.guardianId) {
-      const guardian = await this.guardiansRepository.findOneOrFail(id.guardianId);
-
-      results = await this.transactionsRepository.find({
-        where: { user: { id: guardian.id } },
-        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
-      });
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
     } else if (id.sellerId) {
-      const seller = await this.sellersRepository.findOneOrFail(id.sellerId);
-
-      results = await this.transactionsRepository.find({
-        where: { user: { id: seller.id } },
-        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
-      });
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
     } else if (id.studentId) {
-      const student = await this.studentsRepository.findOneOrFail(id.studentId);
-
-      results = await this.transactionsRepository.find({
-        where: { user: { id: student.id } },
-        relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    } else {
+      throw new BadRequestException({
+        success: false,
+        message: 'Unknown user type',
       });
     }
+
+    const results = await this.transactionsRepository.find({
+      where: { user: { id: user.id } },
+      relations: ['payment', 'sourceTransfer', 'destinationTransfer'],
+    });
 
     return results.map((result) => {
       return {
@@ -333,6 +380,150 @@ export class FinancesService {
         status: result.status,
         created: result.created,
         updated: result.updated,
+      };
+    });
+  }
+
+  public async readPayment(id: ReadPaymentParamsReq): Promise<PaymentRes> {
+    let result: Payment;
+    let user: User | undefined;
+
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
+    } else if (id.sellerId) {
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
+    } else if (id.studentId) {
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    }
+
+    if (user) {
+      result = await this.paymentsRepository.findOneOrFail(id.paymentId, {
+        where: { user: { id: user.id } },
+      });
+    } else {
+      result = await this.paymentsRepository.findOneOrFail(id.paymentId);
+    }
+
+    return {
+      id: result.id,
+      externalPaymentId: result.externalPaymentId,
+      userId: result.userId,
+      userName: result.userName,
+      transactionId: result.transactionId,
+      channelCategory: result.channelCategory,
+      channelCode: result.channelCode,
+      accountNumber: result.accountNumber,
+      amount: result.amount,
+      expirationDate: result.expirationDate,
+      status: result.status,
+    };
+  }
+
+  public async readPayments(id: ReadPaymentsParamsReq): Promise<PaymentsRes> {
+    let user: User;
+
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
+    } else if (id.sellerId) {
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
+    } else if (id.studentId) {
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    } else {
+      throw new BadRequestException({
+        success: false,
+        message: 'Unknown user type',
+      });
+    }
+
+    const results = await this.paymentsRepository.find({
+      where: { user: { id: user.id } },
+    });
+
+    return results.map((result) => {
+      return {
+        id: result.id,
+        externalPaymentId: result.externalPaymentId,
+        userId: result.userId,
+        userName: result.userName,
+        transactionId: result.transactionId,
+        channelCategory: result.channelCategory,
+        channelCode: result.channelCode,
+        accountNumber: result.accountNumber,
+        amount: result.amount,
+        expirationDate: result.expirationDate,
+        status: result.status,
+      };
+    });
+  }
+
+  public async readTransfer(id: ReadTransferParamsReq): Promise<TransferRes> {
+    let result: Transfer;
+    let user: User | undefined;
+
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
+    } else if (id.sellerId) {
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
+    } else if (id.studentId) {
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    }
+
+    if (user) {
+      result = await this.transfersRepository.findOneOrFail(id.transferId, {
+        where: { sourceUser: { id: user.id } },
+      });
+    } else {
+      result = await this.transfersRepository.findOneOrFail(id.transferId);
+    }
+
+    return {
+      id: result.id,
+      sourceUserId: result.sourceUserId,
+      destinationUserId: result.destinationUserId,
+      sourceTransactionId: result.sourceTransactionId,
+      destinationTransactionId: result.destinationTransactionId,
+      amount: result.amount,
+      status: result.status,
+    };
+  }
+
+  public async readTransfers(id: ReadTransfersParamsReq): Promise<TransfersRes> {
+    let user: User;
+
+    if (id.adminId) {
+      user = await this.adminsRepository.findOneOrFail(id.adminId);
+    } else if (id.guardianId) {
+      user = await this.guardiansRepository.findOneOrFail(id.guardianId);
+    } else if (id.sellerId) {
+      user = await this.sellersRepository.findOneOrFail(id.sellerId);
+    } else if (id.studentId) {
+      user = await this.studentsRepository.findOneOrFail(id.studentId);
+    } else {
+      throw new BadRequestException({
+        success: false,
+        message: 'Unknown user type',
+      });
+    }
+
+    const results = await this.transfersRepository.find({
+      where: { sourceUser: { id: user.id } },
+    });
+
+    return results.map((result) => {
+      return {
+        id: result.id,
+        sourceUserId: result.sourceUserId,
+        destinationUserId: result.destinationUserId,
+        sourceTransactionId: result.sourceTransactionId,
+        destinationTransactionId: result.destinationTransactionId,
+        amount: result.amount,
+        status: result.status,
       };
     });
   }

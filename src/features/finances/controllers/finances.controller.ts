@@ -8,10 +8,20 @@ import {
   CreateTransferBodyReq,
   CreateTransferParamsReq,
   CreateTransferRes,
+  ReadBalanceParamsReq,
+  ReadBalanceRes,
+  ReadPaymentParamsReq,
+  ReadPaymentRes,
+  ReadPaymentsParamsReq,
+  ReadPaymentsRes,
   ReadTransactionParamsReq,
   ReadTransactionRes,
   ReadTransactionsParamsReq,
   ReadTransactionsRes,
+  ReadTransferParamsReq,
+  ReadTransferRes,
+  ReadTransfersParamsReq,
+  ReadTransfersRes,
   ReceiveCallbacksBodyReq,
   ReceiveCallbacksHeadersReq,
 } from '../dtos';
@@ -19,8 +29,13 @@ import { FinancesService } from '../services';
 import {
   createPaymentSchema,
   createTransferSchema,
+  readBalanceSchema,
+  readPaymentSchema,
+  readPaymentsSchema,
   readTransactionSchema,
   readTransactionsSchema,
+  readTransferSchema,
+  readTransfersSchema,
 } from '../validations';
 
 @Controller()
@@ -28,6 +43,7 @@ export class FinancesController {
   public constructor(private readonly financesService: FinancesService) {}
 
   @Post([
+    'admins/:adminId/payments',
     'guardians/:guardianId/payments',
     'sellers/:sellerId/payments',
     'students/:studentId/payments',
@@ -50,6 +66,7 @@ export class FinancesController {
   }
 
   @Post([
+    'admins/:adminId/transfers',
     'guardians/:guardianId/transfers',
     'sellers/:sellerId/transfers',
     'students/:studentId/transfers',
@@ -87,6 +104,28 @@ export class FinancesController {
   }
 
   @Get([
+    'admins/:adminId/balances',
+    'guardians/:guardianId/balances',
+    'sellers/:sellerId/balances',
+    'students/:studentId/balances',
+  ])
+  public async readBalance(
+    @Param(new ValidationPipe(readBalanceSchema.params))
+    params: ReadBalanceParamsReq,
+  ): Promise<Response<ReadBalanceRes>> {
+    const result = await this.financesService.readBalance(params);
+
+    return {
+      success: true,
+      message: 'Balances found.',
+      data: {
+        balance: result,
+      },
+    };
+  }
+
+  @Get([
+    'admins/:adminId/transactions',
     'guardians/:guardianId/transactions',
     'sellers/:sellerId/transactions',
     'students/:studentId/transactions',
@@ -108,6 +147,7 @@ export class FinancesController {
 
   @Get([
     'transactions/:transactionId',
+    'admins/:adminId/transactions/:transactionId',
     'guardians/:guardianId/transactions/:transactionId',
     'sellers/:sellerId/transactions/:transactionId',
     'students/:studentId/transactions/:transactionId',
@@ -123,6 +163,92 @@ export class FinancesController {
       message: 'Transaction found.',
       data: {
         transaction: result,
+      },
+    };
+  }
+
+  @Get([
+    'admins/:adminId/payments',
+    'guardians/:guardianId/payments',
+    'sellers/:sellerId/payments',
+    'students/:studentId/payments',
+  ])
+  public async readPayments(
+    @Param(new ValidationPipe(readPaymentsSchema.params))
+    params: ReadPaymentsParamsReq,
+  ): Promise<Response<ReadPaymentsRes>> {
+    const results = await this.financesService.readPayments(params);
+
+    return {
+      success: true,
+      message: results.length === 0 ? 'Payments not found.' : 'Payments found.',
+      data: {
+        payments: results,
+      },
+    };
+  }
+
+  @Get([
+    'payments/:paymentId',
+    'admins/:adminId/payments/:paymentId',
+    'guardians/:guardianId/payments/:paymentId',
+    'sellers/:sellerId/payments/:paymentId',
+    'students/:studentId/payments/:paymentId',
+  ])
+  public async readPayment(
+    @Param(new ValidationPipe(readPaymentSchema.params))
+    params: ReadPaymentParamsReq,
+  ): Promise<Response<ReadPaymentRes>> {
+    const result = await this.financesService.readPayment(params);
+
+    return {
+      success: true,
+      message: 'Payment found.',
+      data: {
+        payment: result,
+      },
+    };
+  }
+
+  @Get([
+    'admins/:adminId/transfers',
+    'guardians/:guardianId/transfers',
+    'sellers/:sellerId/transfers',
+    'students/:studentId/transfers',
+  ])
+  public async readTransfers(
+    @Param(new ValidationPipe(readTransfersSchema.params))
+    params: ReadTransfersParamsReq,
+  ): Promise<Response<ReadTransfersRes>> {
+    const results = await this.financesService.readTransfers(params);
+
+    return {
+      success: true,
+      message: results.length === 0 ? 'Transfers not found.' : 'Transfers found.',
+      data: {
+        transfers: results,
+      },
+    };
+  }
+
+  @Get([
+    'transfers/:transferId',
+    'admins/:adminId/transfers/:transferId',
+    'guardians/:guardianId/transfers/:transferId',
+    'sellers/:sellerId/transfers/:transferId',
+    'students/:studentId/transfers/:transferId',
+  ])
+  public async readTransfer(
+    @Param(new ValidationPipe(readTransferSchema.params))
+    params: ReadTransferParamsReq,
+  ): Promise<Response<ReadTransferRes>> {
+    const result = await this.financesService.readTransfer(params);
+
+    return {
+      success: true,
+      message: 'Transfer found.',
+      data: {
+        transfer: result,
       },
     };
   }
