@@ -10,7 +10,7 @@ import { Callback } from '../features/callbacks/entities';
 import { Product } from '../features/products/entities';
 import { Order, OrderItem } from '../features/orders/entities';
 import { AnyExceptionFilter, HttpExceptionFilter, TypeORMErrorFilter } from './filters';
-import { PasswordService, TokenService } from './services';
+import { PasswordService } from './services';
 
 @Global()
 @Module({
@@ -70,7 +70,6 @@ import { PasswordService, TokenService } from './services';
   ],
   providers: [
     PasswordService,
-    TokenService,
     {
       provide: APP_FILTER,
       useClass: AnyExceptionFilter,
@@ -84,6 +83,6 @@ import { PasswordService, TokenService } from './services';
       useClass: TypeORMErrorFilter,
     },
   ],
-  exports: [PasswordService, TokenService],
+  exports: [PasswordService],
 })
 export class CoreModule {}

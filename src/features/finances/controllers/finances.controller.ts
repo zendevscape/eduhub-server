@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import {
   CreatePaymentBodyReq,
   CreatePaymentParamsReq,
@@ -48,6 +49,7 @@ export class FinancesController {
     'sellers/:sellerId/payments',
     'students/:studentId/payments',
   ])
+  @UseGuards(JwtAuthGuard)
   public async createPayment(
     @Body(new ValidationPipe(createPaymentSchema.body))
     body: CreatePaymentBodyReq,
@@ -71,6 +73,7 @@ export class FinancesController {
     'sellers/:sellerId/transfers',
     'students/:studentId/transfers',
   ])
+  @UseGuards(JwtAuthGuard)
   public async createTransfer(
     @Body(new ValidationPipe(createTransferSchema.body))
     body: CreateTransferBodyReq,
@@ -89,6 +92,7 @@ export class FinancesController {
   }
 
   @Post(['callbacks/finances'])
+  @UseGuards(JwtAuthGuard)
   public async receiveCallbacks(
     @Headers()
     headers: ReceiveCallbacksHeadersReq,
@@ -109,6 +113,7 @@ export class FinancesController {
     'sellers/:sellerId/balances',
     'students/:studentId/balances',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readBalance(
     @Param(new ValidationPipe(readBalanceSchema.params))
     params: ReadBalanceParamsReq,
@@ -130,6 +135,7 @@ export class FinancesController {
     'sellers/:sellerId/transactions',
     'students/:studentId/transactions',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readTransactions(
     @Param(new ValidationPipe(readTransactionsSchema.params))
     params: ReadTransactionsParamsReq,
@@ -152,6 +158,7 @@ export class FinancesController {
     'sellers/:sellerId/transactions/:transactionId',
     'students/:studentId/transactions/:transactionId',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readTransaction(
     @Param(new ValidationPipe(readTransactionSchema.params))
     params: ReadTransactionParamsReq,
@@ -173,6 +180,7 @@ export class FinancesController {
     'sellers/:sellerId/payments',
     'students/:studentId/payments',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readPayments(
     @Param(new ValidationPipe(readPaymentsSchema.params))
     params: ReadPaymentsParamsReq,
@@ -195,6 +203,7 @@ export class FinancesController {
     'sellers/:sellerId/payments/:paymentId',
     'students/:studentId/payments/:paymentId',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readPayment(
     @Param(new ValidationPipe(readPaymentSchema.params))
     params: ReadPaymentParamsReq,
@@ -216,6 +225,7 @@ export class FinancesController {
     'sellers/:sellerId/transfers',
     'students/:studentId/transfers',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readTransfers(
     @Param(new ValidationPipe(readTransfersSchema.params))
     params: ReadTransfersParamsReq,
@@ -238,6 +248,7 @@ export class FinancesController {
     'sellers/:sellerId/transfers/:transferId',
     'students/:studentId/transfers/:transferId',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readTransfer(
     @Param(new ValidationPipe(readTransferSchema.params))
     params: ReadTransferParamsReq,

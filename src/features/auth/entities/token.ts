@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
 import type { User } from '../../users/entities';
 
 export enum TokenType {
@@ -17,6 +17,9 @@ export class Token {
     name: 'user_id',
   })
   public user: User;
+
+  @RelationId('user')
+  public userId: string;
 
   @Column()
   public token: string;

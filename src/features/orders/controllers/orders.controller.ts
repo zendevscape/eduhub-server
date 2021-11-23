@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import {
   CreateOrdersBodyReq,
   CreateOrdersParamsReq,
@@ -18,6 +19,7 @@ export class OrdersController {
   public constructor(private readonly ordersService: OrdersService) {}
 
   @Post(['orders', 'sellers/:sellerId/orders'])
+  @UseGuards(JwtAuthGuard)
   public async createOrders(
     @Body(new ValidationPipe(createOrdersSchema.body))
     body: CreateOrdersBodyReq,
@@ -36,6 +38,7 @@ export class OrdersController {
   }
 
   @Get(['sellers/:sellerId/orders', 'students/:studentId/orders'])
+  @UseGuards(JwtAuthGuard)
   public async readOrders(
     @Param(new ValidationPipe(readOrdersSchema.params))
     params: ReadOrdersParamsReq,
@@ -56,6 +59,7 @@ export class OrdersController {
     'sellers/:sellerId/orders/:orderId',
     'students/:studentId/orders/:orderId',
   ])
+  @UseGuards(JwtAuthGuard)
   public async readOrder(
     @Param(new ValidationPipe(readOrderSchema.params))
     params: ReadOrderParamsReq,

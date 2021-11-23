@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export const createAccessTokenSchema = {
+export const validateUserSchema = {
   body: Joi.object().keys({
     role: Joi.string().valid('admin', 'guardian', 'seller', 'student').required(),
     email: Joi.string().email().required(),

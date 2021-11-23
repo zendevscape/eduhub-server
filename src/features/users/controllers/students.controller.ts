@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import { StudentsService } from '../services';
 import {
   CreateStudentsBodyReq,
@@ -30,6 +31,7 @@ export class StudentsController {
   public constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   public async createStudents(
     @Body(new ValidationPipe(createStudentsSchema.body))
     body: CreateStudentsBodyReq,
@@ -46,6 +48,7 @@ export class StudentsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async readStudents(): Promise<Response<ReadStudentsRes>> {
     const results = await this.studentsService.readStudents();
 
@@ -59,6 +62,7 @@ export class StudentsController {
   }
 
   @Get(':studentId')
+  @UseGuards(JwtAuthGuard)
   public async readStudent(
     @Param(new ValidationPipe(readStudentSchema.params))
     params: ReadStudentParamsReq,
@@ -75,6 +79,7 @@ export class StudentsController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   public async updateStudents(
     @Body(new ValidationPipe(updateStudentsSchema.body))
     body: UpdateStudentsBodyReq,
@@ -91,6 +96,7 @@ export class StudentsController {
   }
 
   @Patch(':studentId')
+  @UseGuards(JwtAuthGuard)
   public async updateStudent(
     @Body(new ValidationPipe(updateStudentSchema.body))
     body: UpdateStudentBodyReq,
@@ -109,6 +115,7 @@ export class StudentsController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteStudents(
     @Body(new ValidationPipe(deleteStudentsSchema.body))
     body: DeleteStudentsBodyReq,
@@ -122,6 +129,7 @@ export class StudentsController {
   }
 
   @Delete(':studentId')
+  @UseGuards(JwtAuthGuard)
   public async deleteStudent(
     @Param(new ValidationPipe(deleteStudentSchema.params))
     params: DeleteStudentParamsReq,

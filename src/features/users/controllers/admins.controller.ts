@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import { AdminsService } from '../services';
 import {
   CreateAdminsBodyReq,
@@ -30,6 +31,7 @@ export class AdminsController {
   public constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   public async createAdmins(
     @Body(new ValidationPipe(createAdminsSchema.body))
     body: CreateAdminsBodyReq,
@@ -46,6 +48,7 @@ export class AdminsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async readAdmins(): Promise<Response<ReadAdminsRes>> {
     const results = await this.adminsService.readAdmins();
 
@@ -60,6 +63,7 @@ export class AdminsController {
   }
 
   @Get(':adminId')
+  @UseGuards(JwtAuthGuard)
   public async readAdmin(
     @Param(new ValidationPipe(readAdminSchema.params))
     params: ReadAdminParamsReq,
@@ -76,6 +80,7 @@ export class AdminsController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   public async updateAdmins(
     @Body(new ValidationPipe(updateAdminsSchema.body))
     body: UpdateAdminsBodyReq,
@@ -92,6 +97,7 @@ export class AdminsController {
   }
 
   @Patch(':adminId')
+  @UseGuards(JwtAuthGuard)
   public async updateAdmin(
     @Body(new ValidationPipe(updateAdminSchema.body))
     body: UpdateAdminBodyReq,
@@ -110,6 +116,7 @@ export class AdminsController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteAdmins(
     @Body(new ValidationPipe(deleteAdminsSchema.body))
     body: DeleteAdminsBodyReq,
@@ -123,6 +130,7 @@ export class AdminsController {
   }
 
   @Delete(':adminId')
+  @UseGuards(JwtAuthGuard)
   public async deleteAdmin(
     @Param(new ValidationPipe(deleteAdminSchema.params))
     params: DeleteAdminParamsReq,

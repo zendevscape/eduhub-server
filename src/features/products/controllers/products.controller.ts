@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import { ProductsService } from '../services';
 import {
   CreateProductsBodyReq,
@@ -35,6 +36,7 @@ export class ProductsController {
   public constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   public async createProduct(
     @Body(new ValidationPipe(createProductsSchema.body))
     body: CreateProductsBodyReq,
@@ -53,6 +55,7 @@ export class ProductsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async readProducts(
     @Param(new ValidationPipe(readProductsSchema.params))
     params: ReadProductsParamsReq,
@@ -69,6 +72,7 @@ export class ProductsController {
   }
 
   @Get(':productId')
+  @UseGuards(JwtAuthGuard)
   public async readProduct(
     @Param(new ValidationPipe(readProductSchema.params))
     params: ReadProductParamsReq,
@@ -85,6 +89,7 @@ export class ProductsController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   public async updateProducts(
     @Body(new ValidationPipe(updateProductsSchema.body))
     body: UpdateProductsBodyReq,
@@ -103,6 +108,7 @@ export class ProductsController {
   }
 
   @Patch(':productId')
+  @UseGuards(JwtAuthGuard)
   public async updateProduct(
     @Body(new ValidationPipe(updateProductSchema.body))
     body: UpdateProductBodyReq,
@@ -121,6 +127,7 @@ export class ProductsController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteProducts(
     @Body(new ValidationPipe(deleteProductsSchema.body))
     body: DeleteProductsBodyReq,
@@ -136,6 +143,7 @@ export class ProductsController {
   }
 
   @Delete(':productId')
+  @UseGuards(JwtAuthGuard)
   public async deleteProductById(
     @Param(new ValidationPipe(deleteProductSchema.params))
     params: DeleteProductParamsReq,

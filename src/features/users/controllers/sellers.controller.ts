@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import { SellersService } from '../services';
 import {
   CreateSellersBodyReq,
@@ -30,6 +31,7 @@ export class SellersController {
   public constructor(private readonly sellersService: SellersService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   public async createSellers(
     @Body(new ValidationPipe(createSellersSchema.body))
     body: CreateSellersBodyReq,
@@ -46,6 +48,7 @@ export class SellersController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async readSellers(): Promise<Response<ReadSellersRes>> {
     const results = await this.sellersService.readSellers();
 
@@ -59,6 +62,7 @@ export class SellersController {
   }
 
   @Get(':sellerId')
+  @UseGuards(JwtAuthGuard)
   public async readSeller(
     @Param(new ValidationPipe(readSellerSchema.params))
     params: ReadSellerParamsReq,
@@ -75,6 +79,7 @@ export class SellersController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   public async updateSellers(
     @Body(new ValidationPipe(updateSellersSchema.body))
     body: UpdateSellersBodyReq,
@@ -91,6 +96,7 @@ export class SellersController {
   }
 
   @Patch(':sellerId')
+  @UseGuards(JwtAuthGuard)
   public async updateSeller(
     @Body(new ValidationPipe(updateSellerSchema.body))
     body: UpdateSellerBodyReq,
@@ -109,6 +115,7 @@ export class SellersController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteSellers(
     @Body(new ValidationPipe(deleteSellersSchema.body))
     body: DeleteSellersBodyReq,
@@ -122,6 +129,7 @@ export class SellersController {
   }
 
   @Delete(':sellerId')
+  @UseGuards(JwtAuthGuard)
   public async deleteSeller(
     @Param(new ValidationPipe(deleteSellerSchema.params))
     params: DeleteSellerParamsReq,

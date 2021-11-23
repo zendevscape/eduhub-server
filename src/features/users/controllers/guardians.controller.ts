@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
 import { ValidationPipe } from '../../../core/pipes';
+import { JwtAuthGuard } from '../../auth/guards';
 import { GuardiansService } from '../services';
 import {
   CreateGuardiansBodyReq,
@@ -30,6 +31,7 @@ export class GuardiansController {
   public constructor(private readonly guardiansService: GuardiansService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   public async createGuardians(
     @Body(new ValidationPipe(createGuardiansSchema.body))
     body: CreateGuardiansBodyReq,
@@ -46,6 +48,7 @@ export class GuardiansController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async readGuardians(): Promise<Response<ReadGuardiansRes>> {
     const results = await this.guardiansService.readGuardians();
 
@@ -59,6 +62,7 @@ export class GuardiansController {
   }
 
   @Get(':guardianId')
+  @UseGuards(JwtAuthGuard)
   public async readGuardian(
     @Param(new ValidationPipe(readGuardianSchema.params))
     params: ReadGuardianParamsReq,
@@ -75,6 +79,7 @@ export class GuardiansController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   public async updateGuardians(
     @Body(new ValidationPipe(updateGuardiansSchema.body))
     body: UpdateGuardiansBodyReq,
@@ -91,6 +96,7 @@ export class GuardiansController {
   }
 
   @Patch(':guardianId')
+  @UseGuards(JwtAuthGuard)
   public async updateGuardian(
     @Body(new ValidationPipe(updateGuardianSchema.body))
     body: UpdateGuardianBodyReq,
@@ -109,6 +115,7 @@ export class GuardiansController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   public async deleteGuardians(
     @Body(new ValidationPipe(deleteGuardiansSchema.body))
     body: DeleteGuardiansBodyReq,
@@ -122,6 +129,7 @@ export class GuardiansController {
   }
 
   @Delete(':guardianId')
+  @UseGuards(JwtAuthGuard)
   public async deleteGuardian(
     @Param(new ValidationPipe(deleteGuardianSchema.params))
     params: DeleteGuardianParamsReq,

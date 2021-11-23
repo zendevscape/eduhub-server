@@ -1,29 +1,28 @@
-import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Put, UseGuards } from '@nestjs/common';
 import { Response } from '../../../core/dtos';
+import { User } from '../../../core/decorators';
 import { ValidationPipe } from '../../../core/pipes';
+import { LocalAuthGuard } from '../guards';
 import { AuthService } from '../services';
 import {
   AccessTokenRes,
-  CreateAccessTokenBodyReq,
+  CreateAccessTokenReq,
   DeleteRefreshTokenBodyReq,
   UpdateAccessTokenBodyReq,
 } from '../dtos';
-import {
-  createAccessTokenSchema,
-  deleteRefreshTokenSchema,
-  updateAccessTokenSchema,
-} from '../validations';
+import { deleteRefreshTokenSchema, updateAccessTokenSchema } from '../validations';
 
 @Controller('auth')
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
   @Post()
+  @UseGuards(LocalAuthGuard)
   public async createAccessToken(
-    @Body(new ValidationPipe(createAccessTokenSchema.body))
-    body: CreateAccessTokenBodyReq,
+    @User()
+    user: CreateAccessTokenReq,
   ): Promise<Response<AccessTokenRes>> {
-    const result = await this.authService.createAccessToken(body);
+    const result = await this.authService.createAccessToken(user);
 
     return {
       success: true,
