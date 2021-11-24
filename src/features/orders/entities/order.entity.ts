@@ -9,7 +9,7 @@ import {
   RelationId,
 } from 'typeorm';
 import type { Seller, Student } from '../../users/entities';
-import type { OrderItem } from './order-item';
+import type { OrderItem } from './order-item.entity';
 
 export enum OrderStatus {
   Success = 'success',

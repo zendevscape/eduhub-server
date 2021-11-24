@@ -8,7 +8,7 @@ import {
   RelationId,
 } from 'typeorm';
 import type { User } from '../../users/entities';
-import type { Transaction } from './transaction';
+import type { Transaction } from './transaction.entity';
 
 export enum PaymentChannelCategory {
   VirtualAccount = 'virtual_account',
