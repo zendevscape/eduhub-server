@@ -1,26 +1,5 @@
-# SchoolHub Back-End
+# SchoolHub
 Node.js back-end with clean architecture.
-
-## Project Structure 
-
-```
-src
-│   app.ts                # Application entry point
-└───core
-|   └───config            # Environment variables and configurations
-|   └───errors            # Error and exception classes
-|   └───loaders           # Application startup files
-|   └───middlewares       # Custom Express middlewares
-|   └───types             # Type declarations
-|   └───utils             # Utility classes and functions
-└───features
-    └───*
-        └───controllers   # Route definitions and controllers
-        └───entities      # TypeORM entities
-        └───services      # Business logic
-        └───types         # Type declarations
-        └───validations   # Joi validation schemas
-```
 
 ## Getting Started
 

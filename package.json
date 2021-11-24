@@ -1,5 +1,5 @@
 {
-  "name": "schoolhub-back-end",
+  "name": "@schoolhub/schoolhub",
   "version": "0.1.0",
   "description": "",
   "main": "main.ts",
