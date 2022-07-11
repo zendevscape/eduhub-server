@@ -1,0 +1,317 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String        @id @default(cuid())
+  name        String
+  email       String        @unique
+  password    String
+  role        Json
+  staff       Staff?
+  guardian    Guardian?
+  student     Student?
+  balance     Balance?
+  transaction Transaction[]
+  store       Store[]
+  storeAdmin  StoreAdmin[]
+  order       Order[]
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Staff {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
+
+  @@map("staff")
+}
+
+model Guardian {
+  id      String    @id @default(cuid())
+  user    User      @relation(fields: [userId], references: [id])
+  userId  String    @unique @map("user_id")
+  student Student[]
+
+  @@map("guardians")
+}
+
+model Student {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @unique @map("user_id")
+  guardian   Guardian @relation(fields: [guardianId], references: [id])
+  guardianId String   @map("guardian_id")
+  birthDate  DateTime @map("birth_date")
+  fatherName String   @map("father_name")
+  motherName String   @map("mother_name")
+
+  @@map("students")
+}
+
+model Balance {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique @map("user_id")
+  amount    Int
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("balances")
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String            @unique @map("user_id")
+  note            String
+  flow            TransactionFlow
+  type            TransactionType
+  amount          Int
+  previousBalance Int               @map("previous_balance")
+  balance         Int
+  status          TransactionStatus
+  deposit         Deposit?
+  withdrawal      Withdrawal?
+  toTransfer      Transfer?         @relation("transfer_to_transaction")
+  fromTransfer    Transfer?         @relation("transfer_from_transaction")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("transactions")
+}
+
+model Deposit {
+  id              String      @id @default(cuid())
+  transaction     Transaction @relation(fields: [transactionId], references: [id])
+  transactionId   String      @unique @map("transaction_id")
+  externalId      String      @map("external_id")
+  channelCategory String      @map("channel_category")
+  channelCode     String      @map("channel_code")
+  accountNumber   String      @map("account_number")
+  expiration      DateTime
+
+  @@map("deposits")
+}
+
+model Withdrawal {
+  id              String      @id @default(cuid())
+  transaction     Transaction @relation(fields: [transactionId], references: [id])
+  transactionId   String      @unique @map("transaction_id")
+  externalId      String      @map("external_id")
+  channelCategory String      @map("channel_category")
+  channelCode     String      @map("channel_code")
+  accountNumber   String      @map("account_number")
+
+  @@map("withdrawals")
+}
+
+model Transfer {
+  id                String      @id @default(cuid())
+  fromTransaction   Transaction @relation("transfer_from_transaction", fields: [fromTransactionId], references: [id])
+  fromTransactionId String      @unique @map("from_transaction_id")
+  toTransaction     Transaction @relation("transfer_to_transaction", fields: [toTransactionId], references: [id])
+  toTransactionId   String      @unique @map("to_transaction_id")
+
+  @@map("transfers")
+}
+
+model Store {
+  id         String       @id @default(cuid())
+  name       String       @unique
+  owner      User         @relation(fields: [ownerId], references: [id])
+  ownerId    String       @map("owner_id")
+  storeAdmin StoreAdmin[]
+  product    Product[]
+  order      Order[]
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+
+  @@map("stores")
+}
+
+model StoreAdmin {
+  id        String   @id @default(cuid())
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String   @map("store_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("store_admins")
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  store       Store       @relation(fields: [storeId], references: [id])
+  storeId     String      @map("store_id")
+  name        String
+  description String
+  price       Int
+  stock       Int
+  orderItem   OrderItem[]
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  store     Store       @relation(fields: [storeId], references: [id])
+  storeId   String      @map("store_id")
+  buyer     User        @relation(fields: [buyerId], references: [id])
+  buyerId   String      @map("buyer_id")
+  quantity  Int
+  price     Int
+  orderItem OrderItem[]
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String   @map("order_id")
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @map("product_id")
+  quantity  Int
+  price     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("order_items")
+}
+
+model StaffUsers {
+  id        String   @unique
+  userId    String   @unique @map("user_id")
+  name      String
+  email     String   @unique
+  password  String
+  isActive  Boolean  @map("is_active")
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  @@map("staff_users")
+}
+
+model GuardianUsers {
+  id        String   @unique
+  userId    String   @unique @map("user_id")
+  name      String
+  email     String   @unique
+  password  String
+  isActive  Boolean  @map("is_active")
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  @@map("guardian_users")
+}
+
+model StudentUsers {
+  id         String   @unique
+  userId     String   @unique @map("user_id")
+  guardianId String   @map("guardian_id")
+  name       String
+  email      String   @unique
+  password   String
+  birthDate  DateTime @map("birth_date")
+  fatherName String   @map("father_name")
+  motherName String   @map("mother_name")
+  isActive   Boolean  @map("is_active")
+  createdAt  DateTime @map("created_at")
+  updatedAt  DateTime @map("updated_at")
+
+  @@map("student_users")
+}
+
+model DepositTransaction {
+  id              String            @unique
+  transactionId   String            @unique @map("transaction_id")
+  userId          String            @unique @map("user_id")
+  note            String
+  flow            TransactionFlow
+  type            TransactionType
+  amount          Int
+  previousBalance Int               @map("previous_balance")
+  balance         Int
+  externalId      String            @map("external_id")
+  channelCategory String            @map("channel_category")
+  channelCode     String            @map("channel_code")
+  accountNumber   String            @map("account_number")
+  expiration      DateTime
+  status          TransactionStatus
+  createdAt       DateTime          @map("created_at")
+  updatedAt       DateTime          @map("updated_at")
+
+  @@map("deposit_transactions")
+}
+
+model WithdrawalTransaction {
+  id              String            @unique
+  transactionId   String            @unique @map("transaction_id")
+  userId          String            @unique @map("user_id")
+  note            String
+  flow            TransactionFlow
+  type            TransactionType
+  amount          Int
+  previousBalance Int               @map("previous_balance")
+  balance         Int
+  externalId      String            @map("external_id")
+  channelCategory String            @map("channel_category")
+  channelCode     String            @map("channel_code")
+  accountNumber   String            @map("account_number")
+  status          TransactionStatus
+  createdAt       DateTime          @map("created_at")
+  updatedAt       DateTime          @map("updated_at")
+
+  @@map("withdrawal_transactions")
+}
+
+model TransferTransaction {
+  id              String            @unique
+  transactionId   String            @unique @map("transaction_id")
+  userId          String            @unique @map("user_id")
+  note            String
+  flow            TransactionFlow
+  type            TransactionType
+  amount          Int
+  previousBalance Int               @map("previous_balance")
+  balance         Int
+  fromUserId      String            @map("from_user_id")
+  toUserId        String            @map("to_user_id")
+  status          TransactionStatus
+  createdAt       DateTime          @map("created_at")
+  updatedAt       DateTime          @map("updated_at")
+
+  @@map("transfer_transactions")
+}
+
+enum TransactionFlow {
+  credit
+  debit
+}
+
+enum TransactionType {
+  deposit
+  withdrawal
+  transfer
+}
+
+enum TransactionStatus {
+  creating
+  pending
+  success
+  failed
+  canceled
+}
