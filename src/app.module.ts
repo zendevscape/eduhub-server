@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CoreModule } from './core';
-import { AuthModule } from './features/auth';
-import { UsersModule } from './features/users';
-import { FinancesModule } from './features/finances';
-import { ProductsModule } from './features/products';
-import { OrdersModule } from './features/orders';
+import { CommonModule } from './common';
+import { AuthModule } from './modules/auth';
+import { UserModule } from './modules/user';
+import { FinanceModule } from './modules/finance';
+import { StoreModule } from './modules/store';
 
 @Module({
-  imports: [CoreModule, AuthModule, UsersModule, FinancesModule, ProductsModule, OrdersModule],
+  imports: [CommonModule, AuthModule, UserModule, FinanceModule, StoreModule],
 })
 export class AppModule {}
