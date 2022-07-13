@@ -247,7 +247,7 @@ SELECT "transactions"."id",
   "transactions"."updated_at"
 FROM "transfers"
   JOIN "transactions" ON "transfers"."from_transaction_id" = "transactions"."id"
-  JOIN "transactions" AS "to_transactions" ON "transfers"."to_transaction_id" = "transactions"."id"
+  JOIN "transactions" AS "to_transactions" ON "transfers"."to_transaction_id" = "to_transactions"."id"
 UNION
 SELECT "transactions"."id",
   "transfers"."id" AS "transfer_id",
@@ -265,7 +265,7 @@ SELECT "transactions"."id",
   "transactions"."updated_at"
 FROM "transfers"
   JOIN "transactions" ON "transfers"."to_transaction_id" = "transactions"."id"
-  JOIN "transactions" AS "from_transactions" ON "transfers"."from_transaction_id" = "transactions"."id";
+  JOIN "transactions" AS "from_transactions" ON "transfers"."from_transaction_id" = "from_transactions"."id";
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 -- CreateIndex
