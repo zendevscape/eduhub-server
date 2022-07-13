@@ -240,7 +240,7 @@ model StudentUsers {
 
 model DepositTransaction {
   id              String            @unique
-  transactionId   String            @unique @map("transaction_id")
+  depositId       String            @unique @map("deposit_id")
   userId          String            @unique @map("user_id")
   note            String
   flow            TransactionFlow
@@ -262,7 +262,7 @@ model DepositTransaction {
 
 model WithdrawalTransaction {
   id              String            @unique
-  transactionId   String            @unique @map("transaction_id")
+  withdrawalId    String            @unique @map("withdrawal_id")
   userId          String            @unique @map("user_id")
   note            String
   flow            TransactionFlow
@@ -283,7 +283,7 @@ model WithdrawalTransaction {
 
 model TransferTransaction {
   id              String            @unique
-  transactionId   String            @unique @map("transaction_id")
+  transferId      String            @unique @map("transfer_id")
   userId          String            @unique @map("user_id")
   note            String
   flow            TransactionFlow

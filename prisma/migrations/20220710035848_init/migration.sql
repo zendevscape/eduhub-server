@@ -190,8 +190,8 @@ FROM "students"
   JOIN "users" ON "students"."user_id" = "users"."id";
 -- CreateView
 CREATE VIEW "deposit_transactions" AS
-SELECT "deposits"."id",
-  "transactions"."id" AS "transaction_id",
+SELECT "transactions"."id",
+  "deposits"."id" AS "deposit_id",
   "transactions"."user_id",
   "transactions"."note",
   "transactions"."flow",
@@ -211,8 +211,8 @@ FROM "deposits"
   JOIN "transactions" ON "deposits"."transaction_id" = "transactions"."id";
 -- CreateView
 CREATE VIEW "withdrawal_transactions" AS
-SELECT "withdrawals"."id",
-  "transactions"."id" AS "transaction_id",
+SELECT "transactions"."id",
+  "withdrawals"."id" AS "withdrawal_id",
   "transactions"."user_id",
   "transactions"."note",
   "transactions"."flow",
@@ -231,8 +231,8 @@ FROM "withdrawals"
   JOIN "transactions" ON "withdrawals"."transaction_id" = "transactions"."id";
 -- CreateView
 CREATE VIEW "transfer_transactions" AS
-SELECT "transfers"."id",
-  "transactions"."id" AS "transaction_id",
+SELECT "transactions"."id",
+  "transfers"."id" AS "transfer_id",
   "transactions"."user_id",
   "transactions"."note",
   "transactions"."flow",
@@ -249,8 +249,8 @@ FROM "transfers"
   JOIN "transactions" ON "transfers"."from_transaction_id" = "transactions"."id"
   JOIN "transactions" AS "to_transactions" ON "transfers"."to_transaction_id" = "transactions"."id"
 UNION
-SELECT "transfers"."id",
-  "transactions"."id" AS "transaction_id",
+SELECT "transactions"."id",
+  "transfers"."id" AS "transfer_id",
   "transactions"."user_id",
   "transactions"."note",
   "transactions"."flow",
