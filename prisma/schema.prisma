@@ -70,7 +70,7 @@ model Balance {
 model Transaction {
   id              String            @id @default(cuid())
   user            User              @relation(fields: [userId], references: [id])
-  userId          String            @unique @map("user_id")
+  userId          String            @map("user_id")
   note            String
   flow            TransactionFlow
   type            TransactionType

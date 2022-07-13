@@ -277,8 +277,6 @@ CREATE UNIQUE INDEX "students_user_id_key" ON "students"("user_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "balances_user_id_key" ON "balances"("user_id");
 -- CreateIndex
-CREATE UNIQUE INDEX "transactions_user_id_key" ON "transactions"("user_id");
--- CreateIndex
 CREATE UNIQUE INDEX "deposits_transaction_id_key" ON "deposits"("transaction_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "withdrawals_transaction_id_key" ON "withdrawals"("transaction_id");
