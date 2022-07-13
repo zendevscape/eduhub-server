@@ -9,7 +9,7 @@ import { Balance, Payment, Transaction, Transfer } from '../modules/finance/enti
 import { Order, OrderItem, Product } from '../modules/store/entities';
 import { Callback } from './entities';
 import { AnyExceptionFilter, HttpExceptionFilter, TypeORMErrorFilter } from './filters';
-import { PasswordService } from './services';
+import { DatabaseService, PasswordService } from './services';
 
 @Global()
 @Module({
@@ -69,6 +69,7 @@ import { PasswordService } from './services';
     TypeOrmModule.forFeature([Callback]),
   ],
   providers: [
+    DatabaseService,
     PasswordService,
     {
       provide: APP_FILTER,
