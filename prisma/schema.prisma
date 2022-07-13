@@ -194,7 +194,7 @@ model OrderItem {
 
 model StaffUsers {
   id        String   @unique
-  userId    String   @unique @map("user_id")
+  staffId   String   @unique @map("staff_id")
   name      String
   email     String   @unique
   password  String
@@ -207,22 +207,22 @@ model StaffUsers {
 }
 
 model GuardianUsers {
-  id        String   @unique
-  userId    String   @unique @map("user_id")
-  name      String
-  email     String   @unique
-  password  String
-  role      Json
-  isActive  Boolean  @map("is_active")
-  createdAt DateTime @map("created_at")
-  updatedAt DateTime @map("updated_at")
+  id         String   @unique
+  guardianId String   @unique @map("guardian_id")
+  name       String
+  email      String   @unique
+  password   String
+  role       Json
+  isActive   Boolean  @map("is_active")
+  createdAt  DateTime @map("created_at")
+  updatedAt  DateTime @map("updated_at")
 
   @@map("guardian_users")
 }
 
 model StudentUsers {
   id         String   @unique
-  userId     String   @unique @map("user_id")
+  studentId  String   @unique @map("student_id")
   guardianId String   @map("guardian_id")
   name       String
   email      String   @unique

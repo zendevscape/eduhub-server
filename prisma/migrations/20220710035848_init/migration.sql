@@ -147,8 +147,8 @@ CREATE TABLE "order_items" (
 );
 -- CreateView
 CREATE VIEW "staff_users" AS
-SELECT "staff"."id",
-  "users"."id" AS "user_id",
+SELECT "users"."id",
+  "staff"."id" AS "staff_id",
   "users"."name",
   "users"."email",
   "users"."password",
@@ -160,8 +160,8 @@ FROM "staff"
   JOIN "users" ON "staff"."user_id" = "users"."id";
 -- CreateView
 CREATE VIEW "guardian_users" AS
-SELECT "guardians"."id",
-  "users"."id" AS "user_id",
+SELECT "users"."id",
+  "guardians"."id" AS "guardian_id",
   "users"."name",
   "users"."email",
   "users"."password",
@@ -173,8 +173,8 @@ FROM "guardians"
   JOIN "users" ON "guardians"."user_id" = "users"."id";
 -- CreateView
 CREATE VIEW "student_users" AS
-SELECT "students"."id",
-  "users"."id" AS "user_id",
+SELECT "users"."id",
+  "students"."id" AS "student_id",
   "students"."guardian_id",
   "users"."name",
   "users"."email",
