@@ -7,6 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Callback {
+  id        String   @id @default(cuid())
+  payloadId String   @unique @map("payload_id")
+  payload   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("callbacks")
+}
+
+model Token {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String   @map("user_id")
+  token      String
+  expiration DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("tokens")
+}
+
 model User {
   id          String        @id @default(cuid())
   name        String
@@ -16,6 +36,7 @@ model User {
   staff       Staff?
   guardian    Guardian?
   student     Student?
+  Token       Token[]
   balance     Balance?
   transaction Transaction[]
   store       Store[]

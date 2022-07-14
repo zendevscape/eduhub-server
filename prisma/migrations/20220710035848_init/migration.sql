@@ -11,6 +11,23 @@ CREATE TYPE "TransactionStatus" AS ENUM (
   'canceled'
 );
 -- CreateTable
+CREATE TABLE "callbacks" (
+  "id" TEXT NOT NULL,
+  "payload_id" TEXT NOT NULL,
+  "payload" TEXT NOT NULL,
+  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "callbacks_pkey" PRIMARY KEY ("id")
+);
+-- CreateTable
+CREATE TABLE "tokens" (
+  "id" TEXT NOT NULL,
+  "user_id" TEXT NOT NULL,
+  "token" TEXT NOT NULL,
+  "expiration" TIMESTAMP(3) NOT NULL,
+  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "tokens_pkey" PRIMARY KEY ("id")
+);
+-- CreateTable
 CREATE TABLE "users" (
   "id" TEXT NOT NULL,
   "name" TEXT NOT NULL,
@@ -267,6 +284,8 @@ FROM "transfers"
   JOIN "transactions" ON "transfers"."to_transaction_id" = "transactions"."id"
   JOIN "transactions" AS "from_transactions" ON "transfers"."from_transaction_id" = "from_transactions"."id";
 -- CreateIndex
+CREATE UNIQUE INDEX "callbacks_payload_id_key" ON "callbacks"("payload_id");
+-- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 -- CreateIndex
 CREATE UNIQUE INDEX "staff_user_id_key" ON "staff"("user_id");
@@ -286,6 +305,9 @@ CREATE UNIQUE INDEX "transfers_from_transaction_id_key" ON "transfers"("from_tra
 CREATE UNIQUE INDEX "transfers_to_transaction_id_key" ON "transfers"("to_transaction_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "stores_name_key" ON "stores"("name");
+-- AddForeignKey
+ALTER TABLE "tokens"
+ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 -- AddForeignKey
 ALTER TABLE "staff"
 ADD CONSTRAINT "staff_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
