@@ -1,6 +1,6 @@
 export class Callback {
-  public id: number;
+  public id: string;
   public payloadId: string;
   public payload: string;
-  public created: Date;
+  public createdAt: Date;
 }

@@ -1,7 +1,10 @@
 import { User } from './user.entity';
-import { Guardian } from './guardian.entity';
 
 export class Student extends User {
-  public guardian: Guardian;
+  public studentId: string;
   public guardianId: string;
+  public birthDate: Date;
+  public fatherName: string;
+  public motherName: string;
+  public isActive: boolean;
 }

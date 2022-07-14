@@ -1,5 +1,4 @@
-export * from './user.entity';
-export * from './admin.entity';
 export * from './guardian.entity';
+export * from './staff.entity';
 export * from './student.entity';
-export * from './seller.entity';
+export * from './user.entity';
