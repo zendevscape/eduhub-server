@@ -10,6 +10,12 @@ CREATE TYPE "TransactionStatus" AS ENUM (
   'failed',
   'canceled'
 );
+-- CreateEnum
+CREATE TYPE "OrderStatus" AS ENUM (
+  'pending',
+  'success',
+  'failed'
+);
 -- CreateTable
 CREATE TABLE "callbacks" (
   "id" TEXT NOT NULL,
@@ -147,6 +153,7 @@ CREATE TABLE "orders" (
   "buyer_id" TEXT NOT NULL,
   "quantity" INTEGER NOT NULL,
   "price" INTEGER NOT NULL,
+  "status" "OrderStatus" NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "orders_pkey" PRIMARY KEY ("id")

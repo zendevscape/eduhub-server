@@ -192,6 +192,7 @@ model Order {
   buyerId   String      @map("buyer_id")
   quantity  Int
   price     Int
+  status    OrderStatus
   orderItem OrderItem[]
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
@@ -338,4 +339,10 @@ enum TransactionStatus {
   success
   failed
   canceled
+}
+
+enum OrderStatus {
+  pending
+  success
+  failed
 }
