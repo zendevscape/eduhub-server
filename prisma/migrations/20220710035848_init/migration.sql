@@ -45,10 +45,10 @@ CREATE TABLE "users" (
   CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
-CREATE TABLE "staff" (
+CREATE TABLE "employees" (
   "id" TEXT NOT NULL,
   "user_id" TEXT NOT NULL,
-  CONSTRAINT "staff_pkey" PRIMARY KEY ("id")
+  CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "guardians" (
@@ -170,18 +170,18 @@ CREATE TABLE "order_items" (
   CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
 );
 -- CreateView
-CREATE VIEW "staff_users" AS
+CREATE VIEW "employee_users" AS
 SELECT "users"."id",
-  "staff"."id" AS "staff_id",
+  "employees"."id" AS "employee_id",
   "users"."name",
   "users"."email",
   "users"."password",
   "users"."role",
-  COALESCE("users"."role"->>'staff'::text, 'false'::text)::boolean AS is_active,
+  COALESCE("users"."role"->>'employees'::text, 'false'::text)::boolean AS is_active,
   "users"."created_at",
   "users"."updated_at"
-FROM "staff"
-  JOIN "users" ON "staff"."user_id" = "users"."id";
+FROM "employees"
+  JOIN "users" ON "employees"."user_id" = "users"."id";
 -- CreateView
 CREATE VIEW "guardian_users" AS
 SELECT "users"."id",
@@ -295,7 +295,7 @@ CREATE UNIQUE INDEX "callbacks_payload_id_key" ON "callbacks"("payload_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 -- CreateIndex
-CREATE UNIQUE INDEX "staff_user_id_key" ON "staff"("user_id");
+CREATE UNIQUE INDEX "employees_user_id_key" ON "employees"("user_id");
 -- CreateIndex
 CREATE UNIQUE INDEX "guardians_user_id_key" ON "guardians"("user_id");
 -- CreateIndex
@@ -316,8 +316,8 @@ CREATE UNIQUE INDEX "stores_name_key" ON "stores"("name");
 ALTER TABLE "tokens"
 ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 -- AddForeignKey
-ALTER TABLE "staff"
-ADD CONSTRAINT "staff_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "employees"
+ADD CONSTRAINT "employees_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 -- AddForeignKey
 ALTER TABLE "guardians"
 ADD CONSTRAINT "guardians_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

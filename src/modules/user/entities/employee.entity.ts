@@ -1,6 +1,6 @@
 import { User } from './user.entity';
 
-export class Staff extends User {
-  public staffId: string;
+export class Employee extends User {
+  public employeeId: string;
   public isActive: boolean;
 }
