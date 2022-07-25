@@ -36,7 +36,7 @@ model User {
   employee    Employee?
   guardian    Guardian?
   student     Student?
-  Token       Token[]
+  token       Token[]
   balance     Balance?
   transaction Transaction[]
   store       Store[]
