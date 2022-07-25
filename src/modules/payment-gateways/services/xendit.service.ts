@@ -9,8 +9,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import {
   Balance,
   Payment,
@@ -37,18 +35,6 @@ export class XenditService extends PaymentGatewaysService {
 
   public constructor(
     private readonly configService: ConfigService,
-
-    @InjectRepository(Balance)
-    private readonly balancesRepository: Repository<Balance>,
-
-    @InjectRepository(Transaction)
-    private readonly transactionsRepository: Repository<Transaction>,
-
-    @InjectRepository(Payment)
-    private readonly paymentsRepository: Repository<Payment>,
-
-    @InjectRepository(Callback)
-    private readonly callbacksRepository: Repository<Callback>,
 
     private readonly xendit: Xendit,
   ) {

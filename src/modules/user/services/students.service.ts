@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { PasswordService } from '../../../common/services';
 import { Guardian, Student } from '../entities';
 import {
@@ -19,12 +17,6 @@ import {
 export class StudentsService {
   public constructor(
     private readonly passwordService: PasswordService,
-
-    @InjectRepository(Guardian)
-    private readonly guardiansRepository: Repository<Guardian>,
-
-    @InjectRepository(Student)
-    private readonly studentsRepository: Repository<Student>,
   ) {}
 
   public async createStudents(students: CreateStudentsBodyReq): Promise<StudentsRes> {

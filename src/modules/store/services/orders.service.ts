@@ -1,7 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Seller, Student } from '../../user/entities';
 import {
   Balance,
@@ -24,31 +22,7 @@ import {
 
 @Injectable()
 export class OrdersService {
-  public constructor(
-    @InjectRepository(Seller)
-    private readonly sellersRepository: Repository<Seller>,
-
-    @InjectRepository(Student)
-    private readonly studentsRepository: Repository<Student>,
-
-    @InjectRepository(Balance)
-    private readonly balancesRepository: Repository<Balance>,
-
-    @InjectRepository(Transaction)
-    private readonly transactionsRepository: Repository<Transaction>,
-
-    @InjectRepository(Transfer)
-    private readonly transfersRepository: Repository<Transfer>,
-
-    @InjectRepository(Product)
-    private readonly productsRepository: Repository<Product>,
-
-    @InjectRepository(Order)
-    private readonly ordersRepository: Repository<Order>,
-
-    @InjectRepository(OrderItem)
-    private readonly orderItemsRepository: Repository<OrderItem>,
-  ) {}
+  public constructor() {}
 
   public async createOrders(
     id: CreateOrdersParamsReq,

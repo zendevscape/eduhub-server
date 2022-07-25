@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Seller } from '../../user/entities';
 import { Product } from '../entities';
 import {
@@ -21,13 +19,7 @@ import {
 
 @Injectable()
 export class ProductsService {
-  public constructor(
-    @InjectRepository(Product)
-    private readonly productsRepository: Repository<Product>,
-
-    @InjectRepository(Seller)
-    private readonly sellersRepository: Repository<Seller>,
-  ) {}
+  public constructor() {}
 
   public async createProducts(
     id: CreateProductsParamsReq,

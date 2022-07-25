@@ -2,9 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user';
-import { Token } from './entities';
 import { AuthController } from './controllers';
 import { AuthService } from './services';
 import { JwtStrategy, LocalStrategy } from './strategies';
@@ -19,7 +17,6 @@ import { JwtStrategy, LocalStrategy } from './strategies';
         secret: configService.get<string>('JWT_SECRET'),
       }),
     }),
-    TypeOrmModule.forFeature([Token]),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],

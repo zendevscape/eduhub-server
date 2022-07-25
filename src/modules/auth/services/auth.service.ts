@@ -1,9 +1,7 @@
 import moment from 'moment';
 import { ConfigService } from '@nestjs/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { PasswordService } from '../../../common/services';
 import { Admin, Guardian, Role, Seller, Student, User } from '../../user/entities';
@@ -25,21 +23,6 @@ export class AuthService {
     private readonly passwordService: PasswordService,
 
     private readonly jwtService: JwtService,
-
-    @InjectRepository(Token)
-    private readonly tokensRepository: Repository<Token>,
-
-    @InjectRepository(Admin)
-    private readonly adminsRepository: Repository<Admin>,
-
-    @InjectRepository(Guardian)
-    private readonly guardiansRepository: Repository<Guardian>,
-
-    @InjectRepository(Seller)
-    private readonly sellersRepository: Repository<Seller>,
-
-    @InjectRepository(Student)
-    private readonly studentsRepository: Repository<Student>,
   ) {}
 
   public async validateUser(credential: ValidateUserReq): Promise<UserRes | undefined> {

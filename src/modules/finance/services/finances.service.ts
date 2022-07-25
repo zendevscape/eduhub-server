@@ -1,6 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Admin, Guardian, Seller, Student, User } from '../../user/entities';
 import { PaymentGatewaysService } from '../../payment-gateways/services';
 import {
@@ -39,30 +37,6 @@ import {
 @Injectable()
 export class FinancesService {
   public constructor(
-    @InjectRepository(Admin)
-    private readonly adminsRepository: Repository<Admin>,
-
-    @InjectRepository(Guardian)
-    private readonly guardiansRepository: Repository<Guardian>,
-
-    @InjectRepository(Seller)
-    private readonly sellersRepository: Repository<Seller>,
-
-    @InjectRepository(Student)
-    private readonly studentsRepository: Repository<Student>,
-
-    @InjectRepository(Balance)
-    private readonly balancesRepository: Repository<Balance>,
-
-    @InjectRepository(Transaction)
-    private readonly transactionsRepository: Repository<Transaction>,
-
-    @InjectRepository(Payment)
-    private readonly paymentsRepository: Repository<Payment>,
-
-    @InjectRepository(Transfer)
-    private readonly transfersRepository: Repository<Transfer>,
-
     private readonly paymentGatewaysService: PaymentGatewaysService,
   ) {}
 
