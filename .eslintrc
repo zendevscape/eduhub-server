@@ -1,7 +1,7 @@
 {
   "env": {
-    "node": true,
-    "jest": true
+    "jest": true,
+    "node": true
   },
   "extends": [
     "eslint:recommended",
@@ -10,13 +10,11 @@
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": [
-    "@typescript-eslint",
-    "no-loops"
+    "@typescript-eslint"
   ],
   "root": true,
   "rules": {
     "@typescript-eslint/explicit-member-accessibility": 2,
-    "@typescript-eslint/no-empty-interface": 0,
-    "no-loops/no-loops": 2
+    "@typescript-eslint/no-empty-interface": 0
   }
 }
