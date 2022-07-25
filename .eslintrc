@@ -14,7 +14,6 @@
   ],
   "root": true,
   "rules": {
-    "@typescript-eslint/explicit-member-accessibility": 2,
-    "@typescript-eslint/no-empty-interface": 0
+    "@typescript-eslint/explicit-member-accessibility": "error"
   }
 }
