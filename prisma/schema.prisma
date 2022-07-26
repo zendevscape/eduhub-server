@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Callback {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   payloadId String   @unique @map("payload_id")
   payload   String
   createdAt DateTime @default(now()) @map("created_at")
@@ -17,7 +17,7 @@ model Callback {
 }
 
 model Token {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @map("user_id")
   token      String
@@ -28,7 +28,7 @@ model Token {
 }
 
 model User {
-  id          String        @id @default(cuid())
+  id          String        @id @default(uuid())
   name        String
   email       String        @unique
   password    String
@@ -49,7 +49,7 @@ model User {
 }
 
 model Employee {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @map("user_id")
 
@@ -57,7 +57,7 @@ model Employee {
 }
 
 model Guardian {
-  id      String    @id @default(cuid())
+  id      String    @id @default(uuid())
   user    User      @relation(fields: [userId], references: [id])
   userId  String    @unique @map("user_id")
   student Student[]
@@ -66,7 +66,7 @@ model Guardian {
 }
 
 model Student {
-  id         String   @id @default(cuid())
+  id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @unique @map("user_id")
   guardian   Guardian @relation(fields: [guardianId], references: [id])
@@ -79,7 +79,7 @@ model Student {
 }
 
 model Balance {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String   @unique @map("user_id")
   amount    Int
@@ -89,7 +89,7 @@ model Balance {
 }
 
 model Transaction {
-  id              String            @id @default(cuid())
+  id              String            @id @default(uuid())
   user            User              @relation(fields: [userId], references: [id])
   userId          String            @map("user_id")
   note            String
@@ -110,7 +110,7 @@ model Transaction {
 }
 
 model Deposit {
-  id              String      @id @default(cuid())
+  id              String      @id @default(uuid())
   transaction     Transaction @relation(fields: [transactionId], references: [id])
   transactionId   String      @unique @map("transaction_id")
   externalId      String      @map("external_id")
@@ -123,7 +123,7 @@ model Deposit {
 }
 
 model Withdrawal {
-  id              String      @id @default(cuid())
+  id              String      @id @default(uuid())
   transaction     Transaction @relation(fields: [transactionId], references: [id])
   transactionId   String      @unique @map("transaction_id")
   externalId      String      @map("external_id")
@@ -135,7 +135,7 @@ model Withdrawal {
 }
 
 model Transfer {
-  id                String      @id @default(cuid())
+  id                String      @id @default(uuid())
   fromTransaction   Transaction @relation("transfer_from_transaction", fields: [fromTransactionId], references: [id])
   fromTransactionId String      @unique @map("from_transaction_id")
   toTransaction     Transaction @relation("transfer_to_transaction", fields: [toTransactionId], references: [id])
@@ -145,7 +145,7 @@ model Transfer {
 }
 
 model Store {
-  id         String       @id @default(cuid())
+  id         String       @id @default(uuid())
   name       String       @unique
   owner      User         @relation(fields: [ownerId], references: [id])
   ownerId    String       @map("owner_id")
@@ -159,7 +159,7 @@ model Store {
 }
 
 model StoreAdmin {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   store     Store    @relation(fields: [storeId], references: [id])
   storeId   String   @map("store_id")
   user      User     @relation(fields: [userId], references: [id])
@@ -170,7 +170,7 @@ model StoreAdmin {
 }
 
 model Product {
-  id          String      @id @default(cuid())
+  id          String      @id @default(uuid())
   store       Store       @relation(fields: [storeId], references: [id])
   storeId     String      @map("store_id")
   name        String
@@ -185,7 +185,7 @@ model Product {
 }
 
 model Order {
-  id        String      @id @default(cuid())
+  id        String      @id @default(uuid())
   store     Store       @relation(fields: [storeId], references: [id])
   storeId   String      @map("store_id")
   buyer     User        @relation(fields: [buyerId], references: [id])
@@ -201,7 +201,7 @@ model Order {
 }
 
 model OrderItem {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   order     Order    @relation(fields: [orderId], references: [id])
   orderId   String   @map("order_id")
   product   Product  @relation(fields: [productId], references: [id])
