@@ -18,16 +18,16 @@ CREATE TYPE "OrderStatus" AS ENUM (
 );
 -- CreateTable
 CREATE TABLE "callbacks" (
-  "id" TEXT NOT NULL,
-  "payload_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "payload_id" UUID NOT NULL,
   "payload" TEXT NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "callbacks_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "tokens" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   "token" TEXT NOT NULL,
   "expiration" TIMESTAMP(3) NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,7 +35,7 @@ CREATE TABLE "tokens" (
 );
 -- CreateTable
 CREATE TABLE "users" (
-  "id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
   "name" TEXT NOT NULL,
   "email" TEXT NOT NULL,
   "password" TEXT NOT NULL,
@@ -46,21 +46,21 @@ CREATE TABLE "users" (
 );
 -- CreateTable
 CREATE TABLE "employees" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "guardians" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   CONSTRAINT "guardians_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "students" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
-  "guardian_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
+  "guardian_id" UUID NOT NULL,
   "birth_date" TIMESTAMP(3) NOT NULL,
   "father_name" TEXT NOT NULL,
   "mother_name" TEXT NOT NULL,
@@ -68,16 +68,16 @@ CREATE TABLE "students" (
 );
 -- CreateTable
 CREATE TABLE "balances" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   "amount" INTEGER NOT NULL,
   "updated_at" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "balances_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "transactions" (
-  "id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   "note" TEXT NOT NULL,
   "flow" "TransactionFlow" NOT NULL,
   "type" "TransactionType" NOT NULL,
@@ -91,9 +91,9 @@ CREATE TABLE "transactions" (
 );
 -- CreateTable
 CREATE TABLE "deposits" (
-  "id" TEXT NOT NULL,
-  "transaction_id" TEXT NOT NULL,
-  "external_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "transaction_id" UUID NOT NULL,
+  "external_id" UUID NOT NULL,
   "channel_category" TEXT NOT NULL,
   "channel_code" TEXT NOT NULL,
   "account_number" TEXT NOT NULL,
@@ -102,9 +102,9 @@ CREATE TABLE "deposits" (
 );
 -- CreateTable
 CREATE TABLE "withdrawals" (
-  "id" TEXT NOT NULL,
-  "transaction_id" TEXT NOT NULL,
-  "external_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "transaction_id" UUID NOT NULL,
+  "external_id" UUID NOT NULL,
   "channel_category" TEXT NOT NULL,
   "channel_code" TEXT NOT NULL,
   "account_number" TEXT NOT NULL,
@@ -112,32 +112,32 @@ CREATE TABLE "withdrawals" (
 );
 -- CreateTable
 CREATE TABLE "transfers" (
-  "id" TEXT NOT NULL,
-  "from_transaction_id" TEXT NOT NULL,
-  "to_transaction_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "from_transaction_id" UUID NOT NULL,
+  "to_transaction_id" UUID NOT NULL,
   CONSTRAINT "transfers_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "stores" (
-  "id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
   "name" TEXT NOT NULL,
-  "owner_id" TEXT NOT NULL,
+  "owner_id" UUID NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "stores_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "store_admins" (
-  "id" TEXT NOT NULL,
-  "store_id" TEXT NOT NULL,
-  "user_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "store_id" UUID NOT NULL,
+  "user_id" UUID NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT "store_admins_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "products" (
-  "id" TEXT NOT NULL,
-  "store_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "store_id" UUID NOT NULL,
   "name" TEXT NOT NULL,
   "description" TEXT NOT NULL,
   "price" INTEGER NOT NULL,
@@ -148,9 +148,9 @@ CREATE TABLE "products" (
 );
 -- CreateTable
 CREATE TABLE "orders" (
-  "id" TEXT NOT NULL,
-  "store_id" TEXT NOT NULL,
-  "buyer_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "store_id" UUID NOT NULL,
+  "buyer_id" UUID NOT NULL,
   "quantity" INTEGER NOT NULL,
   "price" INTEGER NOT NULL,
   "status" "OrderStatus" NOT NULL,
@@ -160,9 +160,9 @@ CREATE TABLE "orders" (
 );
 -- CreateTable
 CREATE TABLE "order_items" (
-  "id" TEXT NOT NULL,
-  "order_id" TEXT NOT NULL,
-  "product_id" TEXT NOT NULL,
+  "id" UUID NOT NULL,
+  "order_id" UUID NOT NULL,
+  "product_id" UUID NOT NULL,
   "quantity" INTEGER NOT NULL,
   "price" INTEGER NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
