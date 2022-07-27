@@ -215,36 +215,36 @@ model OrderItem {
 }
 
 model EmployeeUsers {
-  id         String   @unique
-  employeeId String   @unique @map("employee_id")
+  id         String   @unique @default(uuid())
+  employeeId String   @unique @default(uuid()) @map("employee_id")
   name       String
   email      String   @unique
   password   String
   role       Json
   isActive   Boolean  @map("is_active")
-  createdAt  DateTime @map("created_at")
-  updatedAt  DateTime @map("updated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("employee_users")
 }
 
 model GuardianUsers {
-  id         String   @unique
-  guardianId String   @unique @map("guardian_id")
+  id         String   @unique @default(uuid())
+  guardianId String   @unique @default(uuid()) @map("guardian_id")
   name       String
   email      String   @unique
   password   String
   role       Json
   isActive   Boolean  @map("is_active")
-  createdAt  DateTime @map("created_at")
-  updatedAt  DateTime @map("updated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("guardian_users")
 }
 
 model StudentUsers {
-  id         String   @unique
-  studentId  String   @unique @map("student_id")
+  id         String   @unique @default(uuid())
+  studentId  String   @unique @default(uuid()) @map("student_id")
   guardianId String   @map("guardian_id")
   name       String
   email      String   @unique
@@ -254,15 +254,15 @@ model StudentUsers {
   fatherName String   @map("father_name")
   motherName String   @map("mother_name")
   isActive   Boolean  @map("is_active")
-  createdAt  DateTime @map("created_at")
-  updatedAt  DateTime @map("updated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("student_users")
 }
 
 model DepositTransaction {
-  id              String            @unique
-  depositId       String            @unique @map("deposit_id")
+  id              String            @unique @default(uuid())
+  depositId       String            @unique @default(uuid()) @map("deposit_id")
   userId          String            @map("user_id")
   note            String
   flow            TransactionFlow
@@ -276,15 +276,15 @@ model DepositTransaction {
   accountNumber   String            @map("account_number")
   expiration      DateTime
   status          TransactionStatus
-  createdAt       DateTime          @map("created_at")
-  updatedAt       DateTime          @map("updated_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 
   @@map("deposit_transactions")
 }
 
 model WithdrawalTransaction {
-  id              String            @unique
-  withdrawalId    String            @unique @map("withdrawal_id")
+  id              String            @unique @default(uuid())
+  withdrawalId    String            @unique @default(uuid()) @map("withdrawal_id")
   userId          String            @map("user_id")
   note            String
   flow            TransactionFlow
@@ -297,15 +297,15 @@ model WithdrawalTransaction {
   channelCode     String            @map("channel_code")
   accountNumber   String            @map("account_number")
   status          TransactionStatus
-  createdAt       DateTime          @map("created_at")
-  updatedAt       DateTime          @map("updated_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 
   @@map("withdrawal_transactions")
 }
 
 model TransferTransaction {
-  id              String            @unique
-  transferId      String            @unique @map("transfer_id")
+  id              String            @unique @default(uuid())
+  transferId      String            @unique @default(uuid()) @map("transfer_id")
   userId          String            @map("user_id")
   note            String
   flow            TransactionFlow
@@ -316,8 +316,8 @@ model TransferTransaction {
   fromUserId      String            @map("from_user_id")
   toUserId        String            @map("to_user_id")
   status          TransactionStatus
-  createdAt       DateTime          @map("created_at")
-  updatedAt       DateTime          @map("updated_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 
   @@map("transfer_transactions")
 }
