@@ -32,10 +32,11 @@ CREATE TABLE "tokens" (
 -- CreateTable
 CREATE TABLE "users" (
   "id" UUID NOT NULL,
-  "name" TEXT NOT NULL,
   "email" TEXT NOT NULL,
   "password" TEXT NOT NULL,
   "role" JSONB NOT NULL,
+  "name" TEXT NOT NULL,
+  "birth_date" TIMESTAMP(3) NOT NULL,
   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" TIMESTAMP(3) NOT NULL,
   CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -59,7 +60,6 @@ CREATE TABLE "students" (
   "id" UUID NOT NULL,
   "user_id" UUID NOT NULL,
   "guardian_id" UUID NOT NULL,
-  "birth_date" TIMESTAMP(3) NOT NULL,
   "father_name" TEXT NOT NULL,
   "mother_name" TEXT NOT NULL,
   "deleted_at" TIMESTAMP(3),
@@ -172,10 +172,11 @@ CREATE TABLE "order_items" (
 CREATE VIEW "employee_users" AS
 SELECT "users"."id",
   "employees"."id" AS "employee_id",
-  "users"."name",
   "users"."email",
   "users"."password",
   "users"."role",
+  "users"."name",
+  "users"."birth_date",
   COALESCE(
     "users"."role"->>'employees'::text,
     'false'::text
@@ -189,10 +190,11 @@ FROM "employees"
 CREATE VIEW "guardian_users" AS
 SELECT "users"."id",
   "guardians"."id" AS "guardian_id",
-  "users"."name",
   "users"."email",
   "users"."password",
   "users"."role",
+  "users"."name",
+  "users"."birth_date",
   COALESCE("users"."role"->>'guardian'::text, 'false'::text)::boolean AS active,
   "users"."created_at",
   "users"."updated_at",
@@ -204,11 +206,11 @@ CREATE VIEW "student_users" AS
 SELECT "users"."id",
   "students"."id" AS "student_id",
   "students"."guardian_id",
-  "users"."name",
   "users"."email",
   "users"."password",
   "users"."role",
-  "students"."birth_date",
+  "users"."name",
+  "users"."birth_date",
   "students"."father_name",
   "students"."mother_name",
   COALESCE("users"."role"->>'student'::text, 'false'::text)::boolean AS active,

@@ -29,10 +29,11 @@ model Token {
 
 model User {
   id          String        @id @default(uuid()) @db.Uuid
-  name        String
   email       String        @unique
   password    String
   role        Json
+  name        String
+  birthDate   DateTime      @map("birth_date")
   employee    Employee?
   guardian    Guardian?
   student     Student?
@@ -73,7 +74,6 @@ model Student {
   userId     String    @unique @map("user_id")
   guardian   Guardian  @relation(fields: [guardianId], references: [id])
   guardianId String    @map("guardian_id")
-  birthDate  DateTime  @map("birth_date")
   fatherName String    @map("father_name")
   motherName String    @map("mother_name")
   deletedAt  DateTime? @map("deleted_at")
@@ -220,10 +220,11 @@ model OrderItem {
 model EmployeeUsers {
   id         String    @unique @default(uuid())
   employeeId String    @unique @default(uuid()) @map("employee_id")
-  name       String
   email      String    @unique
   password   String
   role       Json
+  name       String
+  birthDate  DateTime  @map("birth_date")
   active     Boolean   @map("active")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
@@ -235,10 +236,11 @@ model EmployeeUsers {
 model GuardianUsers {
   id         String    @unique @default(uuid())
   guardianId String    @unique @default(uuid()) @map("guardian_id")
-  name       String
   email      String    @unique
   password   String
   role       Json
+  name       String
+  birthDate  DateTime  @map("birth_date")
   active     Boolean   @map("active")
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
@@ -251,10 +253,10 @@ model StudentUsers {
   id         String    @unique @default(uuid())
   studentId  String    @unique @default(uuid()) @map("student_id")
   guardianId String    @map("guardian_id")
-  name       String
   email      String    @unique
   password   String
   role       Json
+  name       String
   birthDate  DateTime  @map("birth_date")
   fatherName String    @map("father_name")
   motherName String    @map("mother_name")
