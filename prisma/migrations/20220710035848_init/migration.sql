@@ -11,11 +11,7 @@ CREATE TYPE "TransactionStatus" AS ENUM (
   'canceled'
 );
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM (
-  'pending',
-  'success',
-  'failed'
-);
+CREATE TYPE "OrderStatus" AS ENUM ('pending', 'success', 'failed');
 -- CreateTable
 CREATE TABLE "callbacks" (
   "id" UUID NOT NULL,
@@ -177,7 +173,10 @@ SELECT "users"."id",
   "users"."email",
   "users"."password",
   "users"."role",
-  COALESCE("users"."role"->>'employees'::text, 'false'::text)::boolean AS is_active,
+  COALESCE(
+    "users"."role"->>'employees'::text,
+    'false'::text
+  )::boolean AS active,
   "users"."created_at",
   "users"."updated_at"
 FROM "employees"
@@ -190,7 +189,7 @@ SELECT "users"."id",
   "users"."email",
   "users"."password",
   "users"."role",
-  COALESCE("users"."role"->>'guardian'::text, 'false'::text)::boolean AS is_active,
+  COALESCE("users"."role"->>'guardian'::text, 'false'::text)::boolean AS active,
   "users"."created_at",
   "users"."updated_at"
 FROM "guardians"
@@ -207,7 +206,7 @@ SELECT "users"."id",
   "students"."birth_date",
   "students"."father_name",
   "students"."mother_name",
-  COALESCE("users"."role"->>'student'::text, 'false'::text)::boolean AS is_active,
+  COALESCE("users"."role"->>'student'::text, 'false'::text)::boolean AS active,
   "users"."created_at",
   "users"."updated_at"
 FROM "students"

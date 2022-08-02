@@ -221,7 +221,7 @@ model EmployeeUsers {
   email      String   @unique
   password   String
   role       Json
-  isActive   Boolean  @map("is_active")
+  active     Boolean  @map("active")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -235,7 +235,7 @@ model GuardianUsers {
   email      String   @unique
   password   String
   role       Json
-  isActive   Boolean  @map("is_active")
+  active     Boolean  @map("active")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -253,7 +253,7 @@ model StudentUsers {
   birthDate  DateTime @map("birth_date")
   fatherName String   @map("father_name")
   motherName String   @map("mother_name")
-  isActive   Boolean  @map("is_active")
+  active     Boolean  @map("active")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
