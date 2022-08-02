@@ -44,12 +44,14 @@ CREATE TABLE "users" (
 CREATE TABLE "employees" (
   "id" UUID NOT NULL,
   "user_id" UUID NOT NULL,
+  "deleted_at" TIMESTAMP(3),
   CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
 CREATE TABLE "guardians" (
   "id" UUID NOT NULL,
   "user_id" UUID NOT NULL,
+  "deleted_at" TIMESTAMP(3),
   CONSTRAINT "guardians_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
@@ -60,6 +62,7 @@ CREATE TABLE "students" (
   "birth_date" TIMESTAMP(3) NOT NULL,
   "father_name" TEXT NOT NULL,
   "mother_name" TEXT NOT NULL,
+  "deleted_at" TIMESTAMP(3),
   CONSTRAINT "students_pkey" PRIMARY KEY ("id")
 );
 -- CreateTable
@@ -178,7 +181,8 @@ SELECT "users"."id",
     'false'::text
   )::boolean AS active,
   "users"."created_at",
-  "users"."updated_at"
+  "users"."updated_at",
+  "employees"."deleted_at"
 FROM "employees"
   JOIN "users" ON "employees"."user_id" = "users"."id";
 -- CreateView
@@ -191,7 +195,8 @@ SELECT "users"."id",
   "users"."role",
   COALESCE("users"."role"->>'guardian'::text, 'false'::text)::boolean AS active,
   "users"."created_at",
-  "users"."updated_at"
+  "users"."updated_at",
+  "guardians"."deleted_at"
 FROM "guardians"
   JOIN "users" ON "guardians"."user_id" = "users"."id";
 -- CreateView
@@ -208,7 +213,8 @@ SELECT "users"."id",
   "students"."mother_name",
   COALESCE("users"."role"->>'student'::text, 'false'::text)::boolean AS active,
   "users"."created_at",
-  "users"."updated_at"
+  "users"."updated_at",
+  "students"."deleted_at"
 FROM "students"
   JOIN "users" ON "students"."user_id" = "users"."id";
 -- CreateView
