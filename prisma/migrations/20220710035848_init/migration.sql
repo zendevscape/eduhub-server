@@ -45,6 +45,7 @@ CREATE TABLE "users" (
 CREATE TABLE "employees" (
   "id" UUID NOT NULL,
   "user_id" UUID NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT false,
   "deleted_at" TIMESTAMP(3),
   CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
@@ -52,6 +53,7 @@ CREATE TABLE "employees" (
 CREATE TABLE "guardians" (
   "id" UUID NOT NULL,
   "user_id" UUID NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT false,
   "deleted_at" TIMESTAMP(3),
   CONSTRAINT "guardians_pkey" PRIMARY KEY ("id")
 );
@@ -62,6 +64,7 @@ CREATE TABLE "students" (
   "guardian_id" UUID NOT NULL,
   "father_name" TEXT NOT NULL,
   "mother_name" TEXT NOT NULL,
+  "active" BOOLEAN NOT NULL DEFAULT false,
   "deleted_at" TIMESTAMP(3),
   CONSTRAINT "students_pkey" PRIMARY KEY ("id")
 );
@@ -176,10 +179,7 @@ SELECT "users"."id",
   "users"."password",
   "users"."name",
   "users"."birth_date",
-  COALESCE(
-    "users"."role"->>'employees'::text,
-    'false'::text
-  )::boolean AS active,
+  "employees"."active",
   "users"."created_at",
   "users"."updated_at",
   "employees"."deleted_at"
@@ -193,7 +193,7 @@ SELECT "users"."id",
   "users"."password",
   "users"."name",
   "users"."birth_date",
-  COALESCE("users"."role"->>'guardian'::text, 'false'::text)::boolean AS active,
+  "guardians"."active",
   "users"."created_at",
   "users"."updated_at",
   "guardians"."deleted_at"
@@ -210,7 +210,7 @@ SELECT "users"."id",
   "users"."birth_date",
   "students"."father_name",
   "students"."mother_name",
-  COALESCE("users"."role"->>'student'::text, 'false'::text)::boolean AS active,
+  "students"."active",
   "users"."created_at",
   "users"."updated_at",
   "students"."deleted_at"
