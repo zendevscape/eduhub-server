@@ -222,7 +222,6 @@ model EmployeeUsers {
   employeeId String    @unique @default(uuid()) @map("employee_id")
   email      String    @unique
   password   String
-  role       Json
   name       String
   birthDate  DateTime  @map("birth_date")
   active     Boolean   @map("active")
@@ -238,7 +237,6 @@ model GuardianUsers {
   guardianId String    @unique @default(uuid()) @map("guardian_id")
   email      String    @unique
   password   String
-  role       Json
   name       String
   birthDate  DateTime  @map("birth_date")
   active     Boolean   @map("active")
@@ -255,7 +253,6 @@ model StudentUsers {
   guardianId String    @map("guardian_id")
   email      String    @unique
   password   String
-  role       Json
   name       String
   birthDate  DateTime  @map("birth_date")
   fatherName String    @map("father_name")
