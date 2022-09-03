@@ -32,7 +32,7 @@ import {
   TransactionsRes,
   TransferRes,
   TransfersRes,
-} from '../dtos';
+} from '../dto';
 
 @Injectable()
 export class FinancesService {

@@ -13,7 +13,7 @@ import {
   UpdateAccessTokenBodyReq,
   UserRes,
   ValidateUserReq,
-} from '../dtos';
+} from '../dto';
 
 @Injectable()
 export class AuthService {

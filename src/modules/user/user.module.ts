@@ -1,16 +1,17 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { FinanceModule } from '../finance';
-import { AdminsService, GuardiansService, SellersService, StudentsService } from './services';
-import {
-  AdminsController,
-  GuardiansController,
-  SellersController,
-  StudentsController,
-} from './controllers';
+import { EmployeesService, GuardiansService, StudentsService, UsersService } from './services';
+import { EmployeesResolver, UsersResolver } from './resolvers';
 
 @Module({
   imports: [forwardRef(() => FinanceModule)],
-  providers: [AdminsService, GuardiansService, SellersService, StudentsService],
-  controllers: [AdminsController, GuardiansController, SellersController, StudentsController],
+  providers: [
+    UsersService,
+    UsersResolver,
+    EmployeesService,
+    EmployeesResolver,
+    GuardiansService,
+    StudentsService,
+  ],
 })
 export class UserModule {}

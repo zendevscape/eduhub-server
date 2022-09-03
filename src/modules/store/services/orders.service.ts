@@ -18,7 +18,7 @@ import {
   OrdersRes,
   ReadOrderParamsReq,
   ReadOrdersParamsReq,
-} from '../dtos';
+} from '../dto';
 
 @Injectable()
 export class OrdersService {

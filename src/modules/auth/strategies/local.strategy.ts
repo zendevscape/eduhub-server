@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { Strategy } from 'passport-local';
-import { UserRes } from '../dtos';
+import { UserRes } from '../dto';
 import { AuthService } from '../services';
 import { validateUserSchema } from '../validations';
 

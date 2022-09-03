@@ -2,8 +2,11 @@ import Joi from 'joi';
 import { APP_FILTER } from '@nestjs/core';
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GraphQLJSONObject } from 'graphql-scalars';
 import { AnyExceptionFilter, HttpExceptionFilter } from './filters';
-import { DatabaseService, PasswordService } from './services';
+import { DatabaseService } from './services';
 
 @Global()
 @Module({
@@ -17,15 +20,16 @@ import { DatabaseService, PasswordService } from './services';
           JWT_SECRET: Joi.string().required(),
           JWT_ACCESS_TOKEN_EXPIRATION: Joi.number().default(24),
           JWT_REFRESH_TOKEN_EXPIRATION: Joi.number().default(30),
-          XENDIT_API_KEY: Joi.string().required(),
-          XENDIT_CALLBACK_TOKEN: Joi.string().required(),
         })
         .unknown(true),
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      resolvers: { JSON: GraphQLJSONObject },
     }),
   ],
   providers: [
     DatabaseService,
-    PasswordService,
     {
       provide: APP_FILTER,
       useClass: AnyExceptionFilter,
@@ -35,6 +39,5 @@ import { DatabaseService, PasswordService } from './services';
       useClass: HttpExceptionFilter,
     },
   ],
-  exports: [PasswordService],
 })
 export class CommonModule {}

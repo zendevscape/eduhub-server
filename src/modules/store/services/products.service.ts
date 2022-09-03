@@ -15,7 +15,7 @@ import {
   UpdateProductParamsReq,
   UpdateProductsBodyReq,
   UpdateProductsParamsReq,
-} from '../dtos';
+} from '../dto';
 
 @Injectable()
 export class ProductsService {
